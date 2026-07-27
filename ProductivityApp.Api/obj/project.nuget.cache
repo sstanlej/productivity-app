@@ -1,0 +1,12 @@
+{
+  "version": 2,
+  "dgSpecHash": "03pndbMlUlg=",
+  "success": true,
+  "projectFilePath": "/Users/sstanlej/Documents/code_projects/productivity_app/ProductivityApp.Api/ProductivityApp.Api.csproj",
+  "expectedPackageFiles": [
+    "/Users/sstanlej/.nuget/packages/microsoft.aspnetcore.openapi/9.0.7/microsoft.aspnetcore.openapi.9.0.7.nupkg.sha512",
+    "/Users/sstanlej/.nuget/packages/microsoft.openapi/1.6.17/microsoft.openapi.1.6.17.nupkg.sha512",
+    "/Users/sstanlej/.nuget/packages/scalar.aspnetcore/2.16.16/scalar.aspnetcore.2.16.16.nupkg.sha512"
+  ],
+  "logs": []
+}
