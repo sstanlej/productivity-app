@@ -1,0 +1,55 @@
+## ==========================================
+## 1. .NET & C# Output / Build Folders
+## ==========================================
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+*.user
+*.userosscache
+*.sln.docstates
+*.userprefs
+*.suo
+
+## ==========================================
+## 2. IDE & Editors (VS Code, JetBrains Rider, Visual Studio)
+## ==========================================
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+.idea/
+*.swp
+*~
+
+## ==========================================
+## 3. macOS Specific
+## ==========================================
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+## ==========================================
+## 4. Frontend / Angular & Node.js (Na przyszłość)
+## ==========================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.angular/
+dist/
+tmp/
+
+## ==========================================
+## 5. Docker & Environment Variables / Secrets
+## ==========================================
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local

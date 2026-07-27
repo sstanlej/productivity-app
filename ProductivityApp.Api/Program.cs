@@ -1,23 +1,26 @@
+using Microsoft.EntityFrameworkCore;
+using ProductivityApp.Api.Data;
 using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// 1. Rejestracja kontrolerów oraz wbudowanego w .NET OpenAPI
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(connectionString));
+
+// Rejestracja kontrolerów oraz wbudowanego w .NET OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
-// 2. Konfiguracja interfejsu wizualnego
+// Konfiguracja interfejsu wizualnego
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi(); // Udostępnia OpenAPI pod /openapi/v1.json
-
-    // Domyślny, czysty start Scalara
+    app.MapOpenApi();
     app.MapScalarApiReference();
 }
 
-// Wyłączone na czas testów lokalnych
 // app.UseHttpsRedirection();
 
 app.UseAuthorization();
