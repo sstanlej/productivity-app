@@ -1,0 +1,16 @@
+services:
+  productivity-db:
+    image: postgres:16-alpine
+    container_name: productivity_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgrespassword
+      POSTGRES_DB: productivity_db
+    ports:
+      - "5435:5432" # Mapowanie portu 5435 na komputerze do portu 5432 wewnątrz kontenera
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
