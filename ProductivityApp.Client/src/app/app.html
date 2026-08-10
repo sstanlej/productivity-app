@@ -1,4 +1,64 @@
-<div style="padding: 20px; font-family: sans-serif;">
-  <h1>🚀 Productivity App - Angular Client</h1>
-  <p>Testowa strona frontendowa.</p>
+<div style="max-width: 600px; margin: 40px auto; font-family: system-ui, sans-serif; padding: 0 20px;">
+  <h1>🚀 Productivity App</h1>
+  <p style="color: #666;">Zarządzanie zadaniami (Angular + .NET 9 + PostgreSQL)</p>
+
+  <!-- FORMULARZ DODAWANIA ZADANIA -->
+  <section style="background: #f4f4f5; padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+    <h3>Dodaj nowe zadanie</h3>
+    <form (ngSubmit)="addTask()">
+      <div style="margin-bottom: 12px;">
+        <input
+          type="text"
+          placeholder="Tytuł zadania..."
+          [(ngModel)]="newTaskTitle"
+          name="title"
+          required
+          style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box;"
+        />
+      </div>
+      <div style="margin-bottom: 12px;">
+        <textarea
+          placeholder="Opis (opcjonalnie)..."
+          [(ngModel)]="newTaskDescription"
+          name="description"
+          style="width: 100%; padding: 10px; border-radius: 4px; border: 1px solid #ccc; box-sizing: border-box; height: 60px;"
+        ></textarea>
+      </div>
+      <button
+        type="submit"
+        style="background: #2563eb; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; font-weight: bold;"
+      >
+        + Dodaj zadanie
+      </button>
+    </form>
+  </section>
+
+  <!-- LISTA ZADAŃ POBRANA Z BAZY -->
+  <section>
+    <h3>Twoje Zadania</h3>
+
+    @if (isLoading()) {
+      <p style="color: #888;">Ładowanie danych z bazy PostgreSQL...</p>
+    } @else if (tasks().length === 0) {
+      <p style="color: #888;">Brak zadań w bazie. Dodaj pierwsze zadanie powyżej!</p>
+    } @else {
+      <ul style="list-style: none; padding: 0;">
+        @for (task of tasks(); track task.id) {
+          <li style="border: 1px solid #e4e4e7; border-radius: 6px; padding: 16px; margin-bottom: 12px; background: white;">
+            <div style="font-weight: bold; font-size: 1.1em; color: #18181b;">
+              {{ task.title }}
+            </div>
+            @if (task.description) {
+              <div style="color: #52525b; font-size: 0.9em; margin-top: 4px;">
+                {{ task.description }}
+              </div>
+            }
+            <div style="margin-top: 8px; font-size: 0.8em; color: #a1a1aa;">
+              ID: {{ task.id }} | Status: {{ task.status }} | Przesunięto: {{ task.rescheduleCount ?? 0 }} razy
+            </div>
+          </li>
+        }
+      </ul>
+    }
+  </section>
 </div>
