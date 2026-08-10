@@ -8,6 +8,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAngular", policy =>
+    {
+        policy.WithOrigins("http://localhost:4200") // Adres frontendu w Angularze
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
 // Rejestracja kontrolerów oraz wbudowanego w .NET OpenAPI
 builder.Services.AddControllers();
 builder.Services.AddOpenApi();
@@ -22,6 +32,7 @@ if (app.Environment.IsDevelopment())
 }
 
 // app.UseHttpsRedirection();
+app.UseCors("AllowAngular");
 
 app.UseAuthorization();
 app.MapControllers();
