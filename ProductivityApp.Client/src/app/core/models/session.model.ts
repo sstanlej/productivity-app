@@ -17,6 +17,13 @@ export interface TaskSession {
   createdAt?: string;
 }
 
+export interface CreateTaskSessionDto {
+  title: string;
+  description?: string;
+  startTime?: string;
+  endTime?: string;
+}
+
 export interface RescheduleRequest {
   newStartTime: string;
   newEndTime: string;

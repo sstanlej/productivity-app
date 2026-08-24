@@ -43,11 +43,29 @@ export class BacklogComponent implements OnInit {
   }
 
   // Otwarcie modalu po kliknięciu w kafelek
+  // Otwarcie modalu z dynamicznie wyliczoną najbliższą pełną godziną
   openScheduleModal(session: TaskSession): void {
     this.selectedSession.set(session);
-    this.scheduleDate = new Date().toISOString().substring(0, 10);
-    this.scheduleStartTime = '12:00';
-    this.scheduleEndTime = '13:00';
+
+    const now = new Date();
+    
+    // Zaokrąglenie w górę do najbliższej pełnej godziny
+    const start = new Date(now);
+    start.setMinutes(0, 0, 0);
+    start.setHours(start.getHours() + 1);
+
+    // Godzina zakończenia: 1h później
+    const end = new Date(start);
+    end.setHours(end.getHours() + 1);
+
+    // Formatowanie daty YYYY-MM-DD z uwzględnieniem lokalnej strefy czasowej
+    const year = start.getFullYear();
+    const month = String(start.getMonth() + 1).padStart(2, '0');
+    const day = String(start.getDate()).padStart(2, '0');
+
+    this.scheduleDate = `${year}-${month}-${day}`;
+    this.scheduleStartTime = start.toTimeString().substring(0, 5);
+    this.scheduleEndTime = end.toTimeString().substring(0, 5);
   }
 
   closeScheduleModal(): void {

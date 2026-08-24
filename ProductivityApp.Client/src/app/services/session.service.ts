@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TaskSession, TaskSessionStatus, RescheduleRequest } from '../core/models/session.model';
+import { CreateTaskSessionDto } from '../core/models/session.model';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +20,10 @@ export class SessionService {
     return this.http.get<TaskSession[]>(`${this.apiUrl}/unplanned`);
   }
 
-  createSession(session: TaskSession): Observable<TaskSession> {
-    return this.http.post<TaskSession>(this.apiUrl, session);
-  }
+  // Zmień sygnaturę metody createSession na:
+createSession(session: CreateTaskSessionDto | TaskSession): Observable<TaskSession> {
+  return this.http.post<TaskSession>(this.apiUrl, session);
+}
 
   updateStatus(id: number, status: TaskSessionStatus): Observable<TaskSession> {
     return this.http.patch<TaskSession>(`${this.apiUrl}/${id}/status`, status, {
