@@ -1,14 +1,27 @@
 <aside class="backlog-container" (click)="closeMenu()">
   <div class="backlog-header">
-    <h3>📋 Do zaplanowania (Backlog)</h3>
-    <span class="badge-count">{{ unplannedSessions().length }}</span>
+    <div class="title-with-badge">
+      <h3>📋 Backlog</h3>
+      <span class="badge-count">{{ unplannedSessions().length }}</span>
+    </div>
+    <button class="btn-toggle-form" (click)="toggleForm()">
+      {{ isFormOpen() ? '✕ Anuluj' : '➕ Dodaj zadanie' }}
+    </button>
   </div>
+
+ <!-- Modal tworzenia zadania -->
+  @if (isFormOpen()) {
+    <app-task-form 
+      (sessionCreated)="onFormSessionCreated()" 
+      (formClosed)="isFormOpen.set(false)">
+    </app-task-form>
+  }
 
   @if (isLoading()) {
     <p class="loading-text">Ładowanie zadań...</p>
   } @else if (unplannedSessions().length === 0) {
     <div class="empty-state">
-      Brak zadań w kolejce. Dodaj zadanie bez zaznaczania godzin lub wrzuć pomysł na później!
+      Brak zadań w kolejce. Kliknij <b>„➕ Dodaj zadanie”</b>, aby dodać nowe zadanie do zrobienia!
     </div>
   } @else {
     <div class="backlog-list">

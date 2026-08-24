@@ -3,11 +3,12 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../services/session.service';
 import { TaskSession, TaskSessionStatus } from '../../core/models/session.model';
+import { TaskFormComponent } from '../task-form/task-form';
 
 @Component({
   selector: 'app-backlog',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, TaskFormComponent],
   templateUrl: './backlog.html',
   styleUrl: './backlog.css'
 })
@@ -18,6 +19,7 @@ export class BacklogComponent implements OnInit {
 
   unplannedSessions = signal<TaskSession[]>([]);
   isLoading = signal<boolean>(true);
+  isFormOpen = signal<boolean>(false);
 
   activeMenuSessionId = signal<number | null>(null);
 
@@ -29,6 +31,16 @@ export class BacklogComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadUnplannedSessions();
+  }
+
+  toggleForm(): void {
+    this.isFormOpen.update(v => !v);
+  }
+
+  onFormSessionCreated(): void {
+    this.isFormOpen.set(false);
+    this.loadUnplannedSessions();
+    this.taskScheduled.emit();
   }
 
   loadUnplannedSessions(): void {
@@ -76,15 +88,14 @@ export class BacklogComponent implements OnInit {
       return;
     }
 
-    // Używamy endpointu reschedule do wstawienia konkretnych godzin
     this.sessionService.rescheduleSession(session.id, {
       newStartTime: startIso,
       newEndTime: endIso
     }).subscribe({
       next: () => {
         this.closeScheduleModal();
-        this.loadUnplannedSessions(); // Usunięcie z listy niezaplanowanych
-        this.taskScheduled.emit();    // Odświeżenie kalendarza
+        this.loadUnplannedSessions();
+        this.taskScheduled.emit();
       },
       error: (err) => {
         alert(err.error || 'Nie udało się zaplanować zadania.');

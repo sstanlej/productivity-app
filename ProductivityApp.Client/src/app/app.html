@@ -5,13 +5,12 @@
   </header>
 
   <main class="dashboard-grid">
-    <!-- Lewa kolumna: Formularz i Kalendarz -->
+    <!-- Lewa kolumna: Tylko Kalendarz 3-dniowy -->
     <div class="main-column">
-      <app-task-form (sessionCreated)="onSessionCreated()"></app-task-form>
       <app-calendar></app-calendar>
     </div>
 
-    <!-- Prawa kolumna: Backlog zadań niezaplanowanych -->
+    <!-- Prawa kolumna: Backlog z wbudowanym formularzem dodawania -->
     <div class="sidebar-column">
       <app-backlog (taskScheduled)="onTaskScheduled()"></app-backlog>
     </div>

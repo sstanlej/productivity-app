@@ -103,7 +103,7 @@ public class SessionsController : ControllerBase
         return Ok(session);
     }
 
-    // PATCH: api/sessions/5/reschedule (przesunięcie z walidacją kolizji i deadline'u)
+    // PATCH: api/sessions/5/reschedule (zaplanowanie lub przesunięcie w kalendarzu)
     [HttpPatch("{id}/reschedule")]
     public async Task<IActionResult> RescheduleSession(int id, [FromBody] RescheduleRequest request)
     {
@@ -118,7 +118,7 @@ public class SessionsController : ControllerBase
             return BadRequest("Czas zakończenia musi być późniejszy niż czas rozpoczęcia.");
         }
 
-        // Sprawdzamy kolizję z wyłączeniem aktualnie edytowanej sesji (s.Id != id)
+        // Sprawdzamy kolizję czasową z innymi zadaniami (z wyłączeniem edytowanego zadania)
         bool hasOverlap = await _context.TaskSessions.AnyAsync(s =>
             s.Id != id &&
             s.StartTime.HasValue && s.EndTime.HasValue &&
@@ -126,17 +126,25 @@ public class SessionsController : ControllerBase
 
         if (hasOverlap)
         {
-            return BadRequest("Nie można przesunąć: w docelowym terminie masz już inne zadanie!");
+            return BadRequest("W docelowym terminie masz już zaplanowane inne zadanie!");
         }
 
+        // Sprawdzamy twardy deadline celu nadrzędnego
         if (session.TaskItem?.Deadline != null && newEnd > session.TaskItem.Deadline.Value)
         {
             return BadRequest("Przesunięcie przekracza dopuszczalny termin zadania nadrzędnego!");
         }
 
+        // KLUCZOWY WARUNEK:
+        // Zwiększamy licznik prokrastynacji TYLKO wtedy, gdy zadanie miało już wcześniej ustaloną datę.
+        // Jeśli było w backlogu (StartTime == null), to jest to pierwsze planowanie -> RescheduleCount pozostaje 0.
+        if (session.StartTime.HasValue)
+        {
+            session.RescheduleCount++;
+        }
+
         session.StartTime = newStart;
         session.EndTime = newEnd;
-        session.RescheduleCount++;
         session.Status = TaskSessionStatus.Planned;
 
         await _context.SaveChangesAsync();

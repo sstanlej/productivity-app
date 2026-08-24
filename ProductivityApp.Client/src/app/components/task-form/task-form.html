@@ -1,53 +1,67 @@
-<section class="form-container">
-  <h3>➕ Dodaj pojedyncze zadanie (Direct Task)</h3>
-  
-  <form (ngSubmit)="submit()">
-    <div class="form-row">
-      <input 
-        type="text" 
-        placeholder="Co masz do zrobienia? (np. Zrobić pranie)..." 
-        [(ngModel)]="title" 
-        name="title" 
-        required 
-        class="input-text"
-      />
+<div class="modal-backdrop" (click)="close()">
+  <div class="modal-card" (click)="$event.stopPropagation()">
+    <div class="modal-header">
+      <h3>➕ Dodaj pojedyncze zadanie (Direct Task)</h3>
+      <button class="btn-close-icon" (click)="close()">✕</button>
     </div>
 
-    <div class="form-row">
-      <textarea 
-        placeholder="Opis / notatka (opcjonalnie)..." 
-        [(ngModel)]="description" 
-        name="description" 
-        class="input-textarea"
-      ></textarea>
-    </div>
-
-    <div class="form-row checkbox-row">
-      <label>
-        <input type="checkbox" [(ngModel)]="isScheduled" name="isScheduled" />
-        Zaplanuj w kalendarzu od razu
-      </label>
-    </div>
-
-    @if (isScheduled) {
-      <div class="schedule-grid">
-        <div>
-          <label>Dzień:</label>
-          <input type="date" [(ngModel)]="date" name="date" class="input-control" />
-        </div>
-        <div>
-          <label>Od:</label>
-          <input type="time" [(ngModel)]="startTime" name="startTime" class="input-control" />
-        </div>
-        <div>
-          <label>Do:</label>
-          <input type="time" [(ngModel)]="endTime" name="endTime" class="input-control" />
-        </div>
+    <form (ngSubmit)="submit()">
+      <div class="form-row">
+        <label>Nazwa zadania:</label>
+        <input 
+          type="text" 
+          placeholder="np. Zrobić zakupy, Posprzątać biurko..." 
+          [(ngModel)]="title" 
+          name="title" 
+          required 
+          class="input-control"
+          autofocus
+        />
       </div>
-    }
 
-    <button type="submit" class="btn-submit">
-      {{ isScheduled ? 'Zapisz w kalendarzu' : 'Dodaj do Backlogu' }}
-    </button>
-  </form>
-</section>
+      <div class="form-row">
+        <label>Opis / Notatka (opcjonalnie):</label>
+        <textarea 
+          placeholder="Dodatkowe szczegóły..." 
+          [(ngModel)]="description" 
+          name="description" 
+          class="input-control textarea-control"
+        ></textarea>
+      </div>
+
+      <div class="form-row checkbox-row">
+        <label>
+          <input type="checkbox" [(ngModel)]="isScheduled" name="isScheduled" />
+          Zaplanuj w kalendarzu od razu
+        </label>
+      </div>
+
+      @if (isScheduled) {
+        <div class="schedule-box">
+          <div class="form-row">
+            <label>Dzień:</label>
+            <input type="date" [(ngModel)]="date" name="date" class="input-control" />
+          </div>
+
+          <div class="schedule-grid-time">
+            <div>
+              <label>Godzina Od:</label>
+              <input type="time" [(ngModel)]="startTime" name="startTime" class="input-control" />
+            </div>
+            <div>
+              <label>Godzina Do:</label>
+              <input type="time" [(ngModel)]="endTime" name="endTime" class="input-control" />
+            </div>
+          </div>
+        </div>
+      }
+
+      <div class="modal-actions">
+        <button type="button" class="btn-cancel" (click)="close()">Anuluj</button>
+        <button type="submit" class="btn-submit">
+          {{ isScheduled ? 'Zapisz w kalendarzu' : 'Dodaj do Backlogu' }}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

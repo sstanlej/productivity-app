@@ -16,10 +16,36 @@
   margin-bottom: 14px;
 }
 
-.backlog-header h3 {
+.title-with-badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.title-with-badge h3 {
   margin: 0;
   font-size: 1.05rem;
   color: #0f172a;
+}
+
+.btn-toggle-form {
+  background: #2563eb;
+  color: white;
+  border: none;
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-toggle-form:hover {
+  background: #1d4ed8;
+}
+
+.form-wrapper {
+  margin-bottom: 16px;
 }
 
 .badge-count {

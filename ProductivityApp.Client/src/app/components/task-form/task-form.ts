@@ -15,6 +15,7 @@ export class TaskFormComponent {
   private sessionService = inject(SessionService);
 
   @Output() sessionCreated = new EventEmitter<void>();
+  @Output() formClosed = new EventEmitter<void>();
 
   title: string = '';
   description: string = '';
@@ -23,6 +24,10 @@ export class TaskFormComponent {
   date: string = new Date().toISOString().substring(0, 10);
   startTime: string = '12:00';
   endTime: string = '13:00';
+
+  close(): void {
+    this.formClosed.emit();
+  }
 
   submit(): void {
     if (!this.title.trim()) return;
