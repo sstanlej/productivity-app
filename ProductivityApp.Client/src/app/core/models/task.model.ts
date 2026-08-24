@@ -1,3 +1,5 @@
+import { TaskSession } from './session.model';
+
 export enum TaskPriority {
   Low = 1,
   Medium = 2,
@@ -19,8 +21,9 @@ export interface TaskItem {
   priority: TaskPriority;
   status: TaskStatus;
   createdAt?: string;
-  originalDueDate: string;
-  currentDueDate: string;
-  rescheduleCount?: number;
-  pointsValue?: number;
+  originalDeadline?: string;
+  deadline?: string;
+  canExtendDeadline: boolean;
+  deadlineShiftCount?: number;
+  sessions?: TaskSession[];
 }

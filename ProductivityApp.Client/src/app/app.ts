@@ -1,8 +1,8 @@
 import { Component, OnInit, signal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { TaskService } from './task';
-import { TaskItem, TaskPriority, TaskStatus } from './task.model';
+import { TaskService } from './services/task.service';
+import { TaskItem, TaskPriority, TaskStatus } from './core/models/task.model';
 
 @Component({
   selector: 'app-root',
