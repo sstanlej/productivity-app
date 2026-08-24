@@ -3,6 +3,7 @@
   flex-direction: column;
   flex: 1;
   height: 100%;
+  min-height: 0;
 }
 
 .calendar-container {
@@ -10,6 +11,7 @@
   flex-direction: column;
   flex: 1;
   height: 100%;
+  min-height: 0;
   position: relative;
 }
 
@@ -17,13 +19,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 38px;
-  margin-bottom: 12px;
+  height: 34px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .calendar-header h2 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-main);
 }
@@ -34,6 +37,7 @@
   gap: 12px;
   margin-bottom: 8px;
   padding-right: 8px;
+  flex-shrink: 0;
 }
 
 .time-axis-spacer {
@@ -97,10 +101,10 @@
   font-size: 0.78rem;
 }
 
-/* Przewijalny kontener siatki */
+/* Przewijalny kontener siatki idealnie dopasowany do dołu */
 .timeline-scroll-container {
   flex: 1;
-  max-height: calc(100vh - 250px);
+  min-height: 0;
   overflow-y: auto;
   border: 1px solid var(--border-color);
   border-radius: 8px;
@@ -119,7 +123,6 @@
   background: var(--border-color);
   border-radius: 4px;
 }
-
 .timeline-body {
   display: grid;
   grid-template-columns: 55px 1fr;

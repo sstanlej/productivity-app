@@ -3,6 +3,7 @@
   flex-direction: column;
   flex: 1;
   height: 100%;
+  min-height: 0;
 }
 
 .backlog-wrapper {
@@ -10,6 +11,7 @@
   flex-direction: column;
   flex: 1;
   height: 100%;
+  min-height: 0;
   position: relative;
 }
 
@@ -17,31 +19,43 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 38px;
-  margin-bottom: 14px;
+  height: 34px;
+  margin-bottom: 10px;
+  flex-shrink: 0;
 }
 
 .backlog-header h3 {
   margin: 0;
-  font-size: 1.25rem;
+  font-size: 1.2rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
-/* Punkt 1: Panel rozciągnięty do samego dołu */
+/* Elastyczny boks Backlogu z własnym scrollem jeśli zadań jest dużo */
 .backlog-box {
   background: var(--bg-column);
   border: 1px solid var(--border-color);
   border-radius: 8px;
   padding: 16px;
   flex: 1;
-  height: 100%;
+  min-height: 0;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   box-sizing: border-box;
 }
 
-/* Punkt 6: Identyczny nagłówek jak w kolumnach kalendarza */
+.backlog-box::-webkit-scrollbar {
+  width: 6px;
+}
+.backlog-box::-webkit-scrollbar-track {
+  background: transparent;
+}
+.backlog-box::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
 .backlog-inner-header {
   display: flex;
   flex-direction: column;
@@ -51,8 +65,8 @@
   border-bottom: 1px solid var(--border-color);
   padding-bottom: 8px;
   margin-bottom: 12px;
+  flex-shrink: 0;
 }
-
 .title-row {
   display: flex;
   align-items: center;
