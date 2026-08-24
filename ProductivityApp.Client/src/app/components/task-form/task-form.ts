@@ -62,4 +62,11 @@ export class TaskFormComponent {
       }
     });
   }
+
+  autoGrow(event: Event): void {
+    const textarea = event.target as HTMLTextAreaElement;
+    if (!textarea) return;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${Math.min(textarea.scrollHeight, 180)}px`; // rośnie max do 180px, potem włącza się scroll
+  }
 }
