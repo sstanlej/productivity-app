@@ -1,0 +1,80 @@
+<aside class="backlog-container" (click)="closeMenu()">
+  <div class="backlog-header">
+    <h3>📋 Do zaplanowania (Backlog)</h3>
+    <span class="badge-count">{{ unplannedSessions().length }}</span>
+  </div>
+
+  @if (isLoading()) {
+    <p class="loading-text">Ładowanie zadań...</p>
+  } @else if (unplannedSessions().length === 0) {
+    <div class="empty-state">
+      Brak zadań w kolejce. Dodaj zadanie bez zaznaczania godzin lub wrzuć pomysł na później!
+    </div>
+  } @else {
+    <div class="backlog-list">
+      @for (session of unplannedSessions(); track session.id) {
+        <div class="backlog-card">
+          <div class="card-header">
+            <span class="card-title">{{ session.title }}</span>
+
+            <!-- Menu koła zębatego -->
+            <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
+              <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
+                ⚙️
+              </button>
+
+              @if (activeMenuSessionId() === session.id) {
+                <div class="dropdown-menu">
+                  <button class="dropdown-item schedule" (click)="openScheduleModal(session)">
+                    📅 Zaplanuj w kalendarzu
+                  </button>
+                  <div class="dropdown-divider"></div>
+                  <button class="dropdown-item delete" (click)="deleteSession(session.id)">
+                    🗑️ Usuń
+                  </button>
+                </div>
+              }
+            </div>
+          </div>
+
+          @if (session.description) {
+            <p class="card-desc">{{ session.description }}</p>
+          }
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Modal Planowania w Kalendarzu -->
+  @if (schedulingSession()) {
+    <div class="modal-backdrop" (click)="closeScheduleModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>📅 Zaplanuj: "{{ schedulingSession()?.title }}"</h3>
+        <p class="modal-subtitle">Wybierz dzień i ramy czasowe w kalendarzu.</p>
+
+        <div class="modal-form">
+          <div class="modal-row">
+            <label>Dzień:</label>
+            <input type="date" [(ngModel)]="scheduleDate" class="input-control" />
+          </div>
+
+          <div class="modal-grid-time">
+            <div>
+              <label>Godzina Od:</label>
+              <input type="time" [(ngModel)]="scheduleStartTime" class="input-control" />
+            </div>
+            <div>
+              <label>Godzina Do:</label>
+              <input type="time" [(ngModel)]="scheduleEndTime" class="input-control" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" (click)="closeScheduleModal()">Anuluj</button>
+            <button class="btn-confirm" (click)="submitSchedule()">Wstaw do kalendarza</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  }
+</aside>

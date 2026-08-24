@@ -1,10 +1,19 @@
-<div style="max-width: 1000px; margin: 30px auto; font-family: system-ui, sans-serif; padding: 0 20px;">
-  <h1>🚀 Productivity App</h1>
-  <p style="color: #64748b;">System zarządzania czasem i zadaniami</p>
+<div class="app-layout">
+  <header class="app-header">
+    <h1>🚀 Productivity App</h1>
+    <p>System zarządzania czasem i zadaniami</p>
+  </header>
 
-  <!-- Formularz dodawania zadań bezpośrednich -->
-  <app-task-form (sessionCreated)="onSessionCreated()"></app-task-form>
+  <main class="dashboard-grid">
+    <!-- Lewa kolumna: Formularz i Kalendarz -->
+    <div class="main-column">
+      <app-task-form (sessionCreated)="onSessionCreated()"></app-task-form>
+      <app-calendar></app-calendar>
+    </div>
 
-  <!-- Widok kalendarza -->
-  <app-calendar></app-calendar>
+    <!-- Prawa kolumna: Backlog zadań niezaplanowanych -->
+    <div class="sidebar-column">
+      <app-backlog (taskScheduled)="onTaskScheduled()"></app-backlog>
+    </div>
+  </main>
 </div>
