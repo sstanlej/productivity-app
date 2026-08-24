@@ -2,5 +2,9 @@
   <h1>🚀 Productivity App</h1>
   <p style="color: #64748b;">System zarządzania czasem i zadaniami</p>
 
+  <!-- Formularz dodawania zadań bezpośrednich -->
+  <app-task-form (sessionCreated)="onSessionCreated()"></app-task-form>
+
+  <!-- Widok kalendarza -->
   <app-calendar></app-calendar>
 </div>

@@ -1,0 +1,53 @@
+<section class="form-container">
+  <h3>➕ Dodaj pojedyncze zadanie (Direct Task)</h3>
+  
+  <form (ngSubmit)="submit()">
+    <div class="form-row">
+      <input 
+        type="text" 
+        placeholder="Co masz do zrobienia? (np. Zrobić pranie)..." 
+        [(ngModel)]="title" 
+        name="title" 
+        required 
+        class="input-text"
+      />
+    </div>
+
+    <div class="form-row">
+      <textarea 
+        placeholder="Opis / notatka (opcjonalnie)..." 
+        [(ngModel)]="description" 
+        name="description" 
+        class="input-textarea"
+      ></textarea>
+    </div>
+
+    <div class="form-row checkbox-row">
+      <label>
+        <input type="checkbox" [(ngModel)]="isScheduled" name="isScheduled" />
+        Zaplanuj w kalendarzu od razu
+      </label>
+    </div>
+
+    @if (isScheduled) {
+      <div class="schedule-grid">
+        <div>
+          <label>Dzień:</label>
+          <input type="date" [(ngModel)]="date" name="date" class="input-control" />
+        </div>
+        <div>
+          <label>Od:</label>
+          <input type="time" [(ngModel)]="startTime" name="startTime" class="input-control" />
+        </div>
+        <div>
+          <label>Do:</label>
+          <input type="time" [(ngModel)]="endTime" name="endTime" class="input-control" />
+        </div>
+      </div>
+    }
+
+    <button type="submit" class="btn-submit">
+      {{ isScheduled ? 'Zapisz w kalendarzu' : 'Dodaj do Backlogu' }}
+    </button>
+  </form>
+</section>

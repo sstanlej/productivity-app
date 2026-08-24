@@ -1,4 +1,4 @@
-<div class="calendar-container">
+<div class="calendar-container" (click)="closeMenu()">
   <div class="calendar-header">
     <h2>📅 Kalendarz 3-dniowy</h2>
   </div>
@@ -24,8 +24,44 @@
                   'status-missed': session.status === TaskSessionStatus.Missed,
                   'status-planned': session.status === TaskSessionStatus.Planned
                 }">
-                  <div class="session-time">
-                    ⏱️ {{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}
+                  <div class="session-top-bar">
+                    <span class="session-time">
+                      ⏱️ {{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}
+                    </span>
+
+                    <!-- Przycisk Koła Zębatego z Dropdownem -->
+                    <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
+                      <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
+                        ⚙️
+                      </button>
+
+                      @if (activeMenuSessionId() === session.id) {
+                        <div class="dropdown-menu">
+                          @if (session.status === TaskSessionStatus.Planned) {
+                            <button class="dropdown-item done" (click)="changeStatus(session, TaskSessionStatus.Completed)">
+                              ✓ Skończyłem
+                            </button>
+                            <button class="dropdown-item miss" (click)="changeStatus(session, TaskSessionStatus.Missed)">
+                              ✗ Przegapiłem
+                            </button>
+                            <button class="dropdown-item reschedule" (click)="openRescheduleModal(session)">
+                              ➡️ Przesuń...
+                            </button>
+                            <div class="dropdown-divider"></div>
+                          } @else {
+                            <!-- Gdy zadanie jest już zakończone/przegapione: tylko przywrócenie lub usunięcie -->
+                            <button class="dropdown-item reset" (click)="changeStatus(session, TaskSessionStatus.Planned)">
+                              🔄 Przywróć (Zaplanowane)
+                            </button>
+                            <div class="dropdown-divider"></div>
+                          }
+                          
+                          <button class="dropdown-item delete" (click)="deleteSession(session.id)">
+                            🗑️ Usuń
+                          </button>
+                        </div>
+                      }
+                    </div>
                   </div>
                   
                   <div class="session-title">{{ session.title }}</div>
@@ -40,17 +76,17 @@
                     </div>
                   }
 
-                  <div class="session-actions">
-                    @if (session.status === TaskSessionStatus.Planned) {
-                      <button class="btn-action btn-complete" (click)="changeStatus(session, TaskSessionStatus.Completed)" title="Oznacz jako zrobione">✓</button>
-                      <button class="btn-action btn-missed" (click)="changeStatus(session, TaskSessionStatus.Missed)" title="Oznacz jako niewykonane">✗</button>
-                      <button class="btn-action btn-reschedule" (click)="rescheduleToTomorrow(session)" title="Przełóż na jutro">➡️</button>
-                    } @else {
-                      <span class="status-label">
-                        {{ session.status === TaskSessionStatus.Completed ? 'Ukończono' : 'Niewykonane' }}
-                      </span>
-                    }
-                    <button class="btn-action btn-delete" (click)="deleteSession(session.id)" title="Usuń pomyłkową sesję">🗑️</button>
+                  <div class="status-footer">
+                    <span class="status-pill" [ngClass]="{
+                      'pill-completed': session.status === TaskSessionStatus.Completed,
+                      'pill-missed': session.status === TaskSessionStatus.Missed,
+                      'pill-planned': session.status === TaskSessionStatus.Planned
+                    }">
+                      {{ 
+                        session.status === TaskSessionStatus.Completed ? 'Ukończono' : 
+                        session.status === TaskSessionStatus.Missed ? 'Niewykonane' : 'Zaplanowane' 
+                      }}
+                    </span>
                   </div>
                 </div>
               }
@@ -58,6 +94,39 @@
           </div>
         </div>
       }
+    </div>
+  }
+
+  <!-- Modal Precyzyjnego Przesuwania -->
+  @if (reschedulingSession()) {
+    <div class="modal-backdrop" (click)="closeRescheduleModal()">
+      <div class="modal-card" (click)="$event.stopPropagation()">
+        <h3>📅 Przesuń zadanie: "{{ reschedulingSession()?.title }}"</h3>
+        <p class="modal-subtitle">Wybierz nowy dzień oraz godziny realizacji.</p>
+
+        <div class="modal-form">
+          <div class="modal-row">
+            <label>Nowy Dzień:</label>
+            <input type="date" [(ngModel)]="rescheduleDate" class="input-control" />
+          </div>
+
+          <div class="modal-grid-time">
+            <div>
+              <label>Godzina Od:</label>
+              <input type="time" [(ngModel)]="rescheduleStartTime" class="input-control" />
+            </div>
+            <div>
+              <label>Godzina Do:</label>
+              <input type="time" [(ngModel)]="rescheduleEndTime" class="input-control" />
+            </div>
+          </div>
+
+          <div class="modal-actions">
+            <button class="btn-cancel" (click)="closeRescheduleModal()">Anuluj</button>
+            <button class="btn-confirm" (click)="submitReschedule()">Zapisz przesunięcie</button>
+          </div>
+        </div>
+      </div>
     </div>
   }
 </div>

@@ -44,10 +44,35 @@ public class SessionsController : ControllerBase
         return Ok(sessions);
     }
 
-    // POST: api/sessions (tutaj dodajemy sesję lub zadanie direct)
+    // POST: api/sessions (tworzenie sesji z walidacją kolizji i deadline'u)
     [HttpPost]
     public async Task<ActionResult<TaskSession>> CreateSession([FromBody] TaskSession session)
     {
+        if (session.StartTime.HasValue && session.EndTime.HasValue)
+        {
+            var startUtc = DateTime.SpecifyKind(session.StartTime.Value, DateTimeKind.Utc);
+            var endUtc = DateTime.SpecifyKind(session.EndTime.Value, DateTimeKind.Utc);
+
+            if (endUtc <= startUtc)
+            {
+                return BadRequest("Czas zakończenia musi być późniejszy niż czas rozpoczęcia.");
+            }
+
+            // 1. Walidacja kolizji czasowej z innymi zaplanowanymi sesjami
+            bool hasOverlap = await _context.TaskSessions.AnyAsync(s =>
+                s.StartTime.HasValue && s.EndTime.HasValue &&
+                startUtc < s.EndTime.Value && endUtc > s.StartTime.Value);
+
+            if (hasOverlap)
+            {
+                return BadRequest("W tym przedziale czasowym masz już zaplanowane inne zadanie!");
+            }
+
+            session.StartTime = startUtc;
+            session.EndTime = endUtc;
+        }
+
+        // 2. Walidacja deadline'u zadania nadrzędnego
         if (session.TaskItemId.HasValue)
         {
             var parentTask = await _context.Tasks.FindAsync(session.TaskItemId.Value);
@@ -58,12 +83,6 @@ public class SessionsController : ControllerBase
                 return BadRequest("Nie można zaplanować sesji poza ostatecznym terminem (Deadline) zadania głównego!");
             }
         }
-
-        if (session.StartTime.HasValue)
-            session.StartTime = DateTime.SpecifyKind(session.StartTime.Value, DateTimeKind.Utc);
-
-        if (session.EndTime.HasValue)
-            session.EndTime = DateTime.SpecifyKind(session.EndTime.Value, DateTimeKind.Utc);
 
         session.CreatedAt = DateTime.UtcNow;
         _context.TaskSessions.Add(session);
@@ -84,7 +103,7 @@ public class SessionsController : ControllerBase
         return Ok(session);
     }
 
-    // PATCH: api/sessions/5/reschedule
+    // PATCH: api/sessions/5/reschedule (przesunięcie z walidacją kolizji i deadline'u)
     [HttpPatch("{id}/reschedule")]
     public async Task<IActionResult> RescheduleSession(int id, [FromBody] RescheduleRequest request)
     {
@@ -93,6 +112,22 @@ public class SessionsController : ControllerBase
 
         var newStart = DateTime.SpecifyKind(request.NewStartTime, DateTimeKind.Utc);
         var newEnd = DateTime.SpecifyKind(request.NewEndTime, DateTimeKind.Utc);
+
+        if (newEnd <= newStart)
+        {
+            return BadRequest("Czas zakończenia musi być późniejszy niż czas rozpoczęcia.");
+        }
+
+        // Sprawdzamy kolizję z wyłączeniem aktualnie edytowanej sesji (s.Id != id)
+        bool hasOverlap = await _context.TaskSessions.AnyAsync(s =>
+            s.Id != id &&
+            s.StartTime.HasValue && s.EndTime.HasValue &&
+            newStart < s.EndTime.Value && newEnd > s.StartTime.Value);
+
+        if (hasOverlap)
+        {
+            return BadRequest("Nie można przesunąć: w docelowym terminie masz już inne zadanie!");
+        }
 
         if (session.TaskItem?.Deadline != null && newEnd > session.TaskItem.Deadline.Value)
         {
@@ -119,10 +154,4 @@ public class SessionsController : ControllerBase
         await _context.SaveChangesAsync();
         return NoContent();
     }
-}
-
-public class RescheduleRequest
-{
-    public DateTime NewStartTime { get; set; }
-    public DateTime NewEndTime { get; set; }
 }
