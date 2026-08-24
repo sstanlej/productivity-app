@@ -1,14 +1,20 @@
 <aside class="backlog-wrapper" (click)="closeMenu()">
-  <!-- 4. Wycentrowany nagłówek Backlogu -->
+  <!-- Główny nagłówek na poziomie nagłówka kalendarza -->
   <div class="backlog-header">
-    <div class="title-with-badge">
-      <h3>📋 Backlog</h3>
-      <span class="badge-count">{{ unplannedSessions().length }}</span>
-    </div>
+    <h3>📋 Backlog</h3>
   </div>
 
-  <!-- Boks rozciągnięty do samego dołu -->
+  <!-- Szary kontener rozciągnięty do dołu z nagłówkiem identycznym jak kolumny dni -->
   <div class="backlog-box">
+    <!-- Punkt 6: Nagłówek 'Niezaplanowane zadania' z licznikiem -->
+    <div class="backlog-inner-header">
+      <div class="title-row">
+        <h4>Niezaplanowane zadania</h4>
+        <span class="badge-count">{{ unplannedSessions().length }}</span>
+      </div>
+      <span class="subtitle-text">Poczekalnia</span>
+    </div>
+
     @if (isLoading()) {
       <p class="loading-text">Ładowanie zadań...</p>
     } @else if (unplannedSessions().length === 0) {
@@ -22,7 +28,6 @@
             <div class="card-header">
               <span class="card-title">{{ session.title }}</span>
 
-              <!-- Menu koła zębatego -->
               <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
                 <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
                   ⚙️

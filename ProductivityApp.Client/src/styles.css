@@ -8,18 +8,38 @@
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+
+  /* Statusy i badge w trybie jasnym */
+  --badge-reschedule-bg: #fef3c7;
+  --badge-reschedule-text: #b45309;
+  --pill-completed-bg: #dcfce7;
+  --pill-completed-text: #15803d;
+  --pill-missed-bg: #fee2e2;
+  --pill-missed-text: #b91c1c;
+  --card-completed-bg: rgba(16, 185, 129, 0.08);
+  --card-missed-bg: rgba(239, 68, 68, 0.08);
 }
 
 [data-theme="dark"] {
   --bg-page: #090d16;
   --bg-card: #161f30;
   --bg-column: #0f172a;
-  --border-color: #334155;
+  --border-color: #1e293b;
   --text-main: #f8fafc;
   --text-muted: #94a3b8;
   --primary: #3b82f6;
   --primary-hover: #2563eb;
   --card-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+
+  /* Punkt 4: Ciemniejsze, stonowane statusy i badge w trybie ciemnym */
+  --badge-reschedule-bg: #451a03;
+  --badge-reschedule-text: #fde047;
+  --pill-completed-bg: #064e3b;
+  --pill-completed-text: #6ee7b7;
+  --pill-missed-bg: #7f1d1d;
+  --pill-missed-text: #fca5a5;
+  --card-completed-bg: rgba(6, 78, 59, 0.25);
+  --card-missed-bg: rgba(127, 29, 29, 0.25);
 }
 
 html, body {

@@ -4,7 +4,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -12,6 +12,7 @@
   backdrop-filter: blur(3px);
 }
 
+/* Punkt 2: Ciemny modal w dark mode */
 .modal-card {
   background: var(--bg-card);
   color: var(--text-main);
@@ -19,7 +20,7 @@
   border-radius: 10px;
   width: 90%;
   max-width: 440px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
   border: 1px solid var(--border-color);
 }
 
@@ -41,7 +42,7 @@
 .btn-close-icon {
   background: none;
   border: none;
-  font-size: 1rem;
+  font-size: 1.1rem;
   cursor: pointer;
   color: var(--text-muted);
   padding: 4px;
@@ -63,6 +64,7 @@
   margin-bottom: 4px;
 }
 
+/* Pola tekstowe dopasowane do motywu */
 .input-control {
   width: 100%;
   padding: 8px 10px;
@@ -73,6 +75,11 @@
   box-sizing: border-box;
   font-family: inherit;
   font-size: 0.9rem;
+}
+
+.input-control:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .textarea-control {
@@ -131,7 +138,7 @@
 
 .btn-submit {
   background: var(--primary);
-  color: white;
+  color: #ffffff;
   border: none;
   padding: 8px 16px;
   border-radius: 6px;

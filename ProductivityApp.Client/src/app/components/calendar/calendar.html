@@ -10,7 +10,11 @@
       @for (day of days(); track day.label) {
         <div class="day-column" [class.today-column]="day.isToday">
           <div class="day-header">
-            <h3>{{ day.label }}</h3>
+            <div class="day-title-row">
+              <h3>{{ day.label }}</h3>
+              <!-- Punkt 3: Licznik zadań w kółeczku -->
+              <span class="badge-count">{{ day.sessions.length }}</span>
+            </div>
             <span class="day-date">{{ day.date | date:'dd.MM.yyyy' }}</span>
           </div>
 

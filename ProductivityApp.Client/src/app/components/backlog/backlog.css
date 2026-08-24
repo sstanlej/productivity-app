@@ -1,11 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+
 .backlog-wrapper {
   display: flex;
   flex-direction: column;
+  flex: 1;
   height: 100%;
   position: relative;
 }
 
-/* 4. Wyśrodkowany nagłówek Backlogu */
 .backlog-header {
   display: flex;
   justify-content: center;
@@ -14,17 +21,55 @@
   margin-bottom: 14px;
 }
 
-.title-with-badge {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.title-with-badge h3 {
+.backlog-header h3 {
   margin: 0;
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-main);
+}
+
+/* Punkt 1: Panel rozciągnięty do samego dołu */
+.backlog-box {
+  background: var(--bg-column);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 16px;
+  flex: 1;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* Punkt 6: Identyczny nagłówek jak w kolumnach kalendarza */
+.backlog-inner-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.title-row h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.subtitle-text {
+  color: var(--text-muted);
+  font-size: 0.85rem;
 }
 
 .badge-count {
@@ -33,20 +78,8 @@
   border: 1px solid var(--border-color);
   font-size: 0.75rem;
   font-weight: bold;
-  padding: 2px 8px;
+  padding: 1px 7px;
   border-radius: 12px;
-}
-
-/* 4. Rozciągnięty panel do samego dołu */
-.backlog-box {
-  background: var(--bg-column);
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  padding: 16px;
-  flex: 1;
-  min-height: 480px;
-  display: flex;
-  flex-direction: column;
 }
 
 .loading-text, .empty-state {
@@ -115,7 +148,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
   min-width: 170px;
   z-index: 100;
   overflow: hidden;
@@ -149,7 +182,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;

@@ -1,11 +1,18 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+}
+
 .calendar-container {
   display: flex;
   flex-direction: column;
+  flex: 1;
   height: 100%;
   position: relative;
 }
 
-/* 1. Wyśrodkowany nagłówek kalendarza */
 .calendar-header {
   display: flex;
   justify-content: center;
@@ -22,30 +29,45 @@
   text-align: center;
 }
 
+/* Układ siatki: Focus na środkowej kolumnie Dzisiaj (szersza) */
 .grid-columns {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: 0.88fr 1.24fr 0.88fr;
   gap: 16px;
   flex: 1;
+  height: 100%;
+  align-items: stretch;
 }
 
-/* 2. Panele rozciągające się do samego dołu */
+/* Bazowy styl dla bocznych kolumn (Wczoraj, Jutro) - nieco niższe i subtelniejsze */
 .day-column {
   background: var(--bg-column);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 16px;
+  padding: 12px;
   display: flex;
   flex-direction: column;
-  min-height: 480px;
+  flex: 1;
+  box-sizing: border-box;
+  margin-top: 14px;
+  margin-bottom: 14px;
+  opacity: 0.94;
+  transition: all 0.25s ease;
 }
 
+/* Główny Focus: Kolumna Dzisiaj (pełna wysokość, bez marginesów pionowych) */
 .day-column.today-column {
   background: var(--bg-card);
   border: 2px solid var(--primary);
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.12);
+  margin-top: 0;
+  margin-bottom: 0;
+  padding: 16px;
+  opacity: 1;
+  z-index: 2;
 }
 
-/* 3. Wyśrodkowane nagłówki dni */
+/* Nagłówki dni */
 .day-header {
   display: flex;
   flex-direction: column;
@@ -57,63 +79,112 @@
   margin-bottom: 12px;
 }
 
-.day-header h3 {
-  margin: 0 0 2px 0;
-  font-size: 1.1rem;
-  font-weight: 700;
+.day-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+/* Mniejszy nagłówek w bocznych kolumnach */
+.day-column h3 {
+  margin: 0;
+  font-size: 0.98rem;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+/* Większy, wyróżniony nagłówek w kolumnie Dzisiaj */
+.day-column.today-column h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
   color: var(--text-main);
+}
+
+.badge-count {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  font-size: 0.72rem;
+  font-weight: bold;
+  padding: 1px 6px;
+  border-radius: 12px;
 }
 
 .day-date {
   color: var(--text-muted);
+  font-size: 0.8rem;
+}
+
+.day-column.today-column .day-date {
   font-size: 0.85rem;
+  color: var(--primary);
+  font-weight: 500;
 }
 
 .sessions-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   flex: 1;
+}
+
+.day-column.today-column .sessions-list {
+  gap: 12px;
 }
 
 .empty-state {
   color: var(--text-muted);
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   text-align: center;
-  margin-top: 60px;
+  margin-top: 50px;
 }
 
+/* Kafelki zadań w bocznych kolumnach (subtelnie mniejsze) */
 .session-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-left: 4px solid var(--primary);
+  border-left: 3px solid var(--border-color);
   border-radius: 6px;
-  padding: 12px;
+  padding: 9px 10px;
   box-shadow: var(--card-shadow);
   position: relative;
+  font-size: 0.85rem;
+}
+
+/* Kafelki zadań w kolumnie Dzisiaj (pełny rozmiar) */
+.day-column.today-column .session-card {
+  padding: 12px;
+  border-left-width: 4px;
+  border-left-color: var(--primary);
+  font-size: 0.9rem;
 }
 
 .session-card.status-completed {
-  border-left-color: #10b981;
-  background: rgba(16, 185, 129, 0.08);
+  border-left-color: #10b981 !important;
+  background: var(--card-completed-bg);
 }
 
 .session-card.status-missed {
-  border-left-color: #ef4444;
-  background: rgba(239, 68, 68, 0.08);
+  border-left-color: #ef4444 !important;
+  background: var(--card-missed-bg);
 }
 
 .session-top-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
 }
 
 .session-time {
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: bold;
   color: var(--text-muted);
+}
+
+.day-column.today-column .session-time {
+  font-size: 0.76rem;
 }
 
 .gear-menu-wrapper {
@@ -124,9 +195,14 @@
   background: none;
   border: 1px solid transparent;
   cursor: pointer;
+  padding: 1px 4px;
+  font-size: 0.8rem;
+  border-radius: 4px;
+}
+
+.day-column.today-column .btn-gear {
   padding: 2px 6px;
   font-size: 0.9rem;
-  border-radius: 4px;
 }
 
 .btn-gear:hover {
@@ -140,7 +216,7 @@
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.25);
+  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
   min-width: 160px;
   z-index: 100;
   overflow: hidden;
@@ -172,41 +248,58 @@
 
 .session-title {
   font-weight: 600;
-  margin: 4px 0;
+  margin: 2px 0;
   color: var(--text-main);
+  font-size: 0.88rem;
+}
+
+.day-column.today-column .session-title {
+  font-size: 0.95rem;
+  margin: 4px 0;
 }
 
 .session-desc {
-  font-size: 0.85rem;
+  font-size: 0.78rem;
   color: var(--text-muted);
+  margin-bottom: 4px;
+}
+
+.day-column.today-column .session-desc {
+  font-size: 0.85rem;
   margin-bottom: 6px;
 }
 
 .reschedule-badge {
-  font-size: 0.72rem;
-  color: #b45309;
-  background: #fef3c7;
-  padding: 2px 6px;
+  font-size: 0.68rem;
+  color: var(--badge-reschedule-text);
+  background: var(--badge-reschedule-bg);
+  padding: 2px 5px;
   border-radius: 4px;
   display: inline-block;
-  margin-bottom: 6px;
+  margin-bottom: 4px;
+  font-weight: 600;
 }
 
 .status-footer {
-  margin-top: 6px;
+  margin-top: 4px;
 }
 
 .status-pill {
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   font-weight: 600;
-  padding: 2px 8px;
+  padding: 1px 6px;
   border-radius: 12px;
   text-transform: uppercase;
 }
 
-.pill-planned { background: #dbeafe; color: #1d4ed8; }
-.pill-completed { background: #dcfce7; color: #15803d; }
-.pill-missed { background: #fee2e2; color: #b91c1c; }
+.day-column.today-column .status-pill {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+}
+
+.pill-planned { background: #1e3a8a; color: #93c5fd; }
+.pill-completed { background: var(--pill-completed-bg); color: var(--pill-completed-text); }
+.pill-missed { background: var(--pill-missed-bg); color: var(--pill-missed-text); }
 
 /* Modal */
 .modal-backdrop {
@@ -215,7 +308,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
+  background: rgba(0, 0, 0, 0.7);
   display: flex;
   justify-content: center;
   align-items: center;
