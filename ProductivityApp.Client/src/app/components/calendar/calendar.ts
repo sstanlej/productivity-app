@@ -25,10 +25,8 @@ export class CalendarComponent implements OnInit {
   days = signal<DayColumn[]>([]);
   isLoading = signal<boolean>(true);
 
-  // Stan dla menu kontekstowego (ID sesji, której menu jest otwarte)
   activeMenuSessionId = signal<number | null>(null);
 
-  // Stan dla okna modalnego przesuwania zadania
   reschedulingSession = signal<TaskSession | null>(null);
   rescheduleDate: string = '';
   rescheduleStartTime: string = '';
@@ -36,7 +34,7 @@ export class CalendarComponent implements OnInit {
 
   ngOnInit(): void {
     this.setupDays();
-    this.loadSessions();
+    this.loadSessions(true); // Pierwsze ładowanie z flagą pokazania wskaźnika
   }
 
   setupDays(): void {
@@ -55,8 +53,12 @@ export class CalendarComponent implements OnInit {
     ]);
   }
 
-  loadSessions(): void {
-    this.isLoading.set(true);
+  // Flaga showLoader decyduje, czy niszczyć widok kalendarza podczas pobierania danych
+  loadSessions(showLoader: boolean = false): void {
+    if (showLoader) {
+      this.isLoading.set(true);
+    }
+
     const currentDays = this.days();
     
     const startRange = new Date(currentDays[0].date);
@@ -96,17 +98,25 @@ export class CalendarComponent implements OnInit {
     this.activeMenuSessionId.set(null);
   }
 
+  // Płynna zmiana statusu bez migania i bez skoków scrolla
   changeStatus(session: TaskSession, status: TaskSessionStatus): void {
     if (!session.id) return;
     this.closeMenu();
 
     this.sessionService.updateStatus(session.id, status).subscribe({
-      next: () => this.loadSessions(),
+      next: () => {
+        // Zamiast przeładowywać wszystko z serwera, aktualizujemy stan w sygnale lokalnie
+        this.days.update(columns => 
+          columns.map(col => ({
+            ...col,
+            sessions: col.sessions.map(s => s.id === session.id ? { ...s, status } : s)
+          }))
+        );
+      },
       error: (err) => console.error('Błąd zmiany statusu:', err)
     });
   }
 
-  // Otwarcie modalu precyzyjnego przesuwania
   openRescheduleModal(session: TaskSession): void {
     this.closeMenu();
     this.reschedulingSession.set(session);
@@ -115,7 +125,6 @@ export class CalendarComponent implements OnInit {
       const start = new Date(session.startTime);
       const end = new Date(session.endTime);
 
-      // Ustawienie domyślnych wartości z przesunięciem na kolejny dzień
       start.setDate(start.getDate() + 1);
       end.setDate(end.getDate() + 1);
 
@@ -151,7 +160,7 @@ export class CalendarComponent implements OnInit {
     }).subscribe({
       next: () => {
         this.closeRescheduleModal();
-        this.loadSessions();
+        this.loadSessions(false); // Ciche przeładowanie bez niszczenia DOM
       },
       error: (err) => {
         alert(err.error || 'Nie udało się przesunąć zadania.');
@@ -165,7 +174,15 @@ export class CalendarComponent implements OnInit {
     if (!confirm('Czy na pewno chcesz usunąć tę sesję?')) return;
 
     this.sessionService.deleteSession(id).subscribe({
-      next: () => this.loadSessions(),
+      next: () => {
+        // Usunięcie z widoku bez migania
+        this.days.update(columns => 
+          columns.map(col => ({
+            ...col,
+            sessions: col.sessions.filter(s => s.id !== id)
+          }))
+        );
+      },
       error: (err) => console.error('Błąd usuwania sesji:', err)
     });
   }
