@@ -5,10 +5,19 @@ namespace ProductivityApp.Api.Data;
 
 public class AppDbContext : DbContext
 {
-    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
-    {
-    }
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-    // Stworzenie tabeli Tasks z kolumnami odpowiadającymi właściwościom klasy TaskItem
-    public DbSet<TaskItem> Tasks => Set<TaskItem>();
+    public DbSet<TaskItem> Tasks { get; set; }
+    public DbSet<TaskSession> TaskSessions { get; set; }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<TaskSession>()
+            .HasOne(s => s.TaskItem)
+            .WithMany(t => t.Sessions)
+            .HasForeignKey(s => s.TaskItemId)
+            .OnDelete(DeleteBehavior.Cascade);
+    }
 }
