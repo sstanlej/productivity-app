@@ -87,95 +87,117 @@
     </div>
   }
 
-  <!-- MODAL SZCZEGÓŁÓW ZADANIA (Po kliknięciu w kafelek) -->
+  <!-- MODAL SZCZEGÓŁÓW ZADANIA -->
   @if (selectedSession()) {
     <div class="modal-backdrop" (click)="closeDetails()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
+      <div class="modal-card ios-modal" (click)="$event.stopPropagation()">
         
+        <!-- Nagłówek -->
         <div class="modal-header">
-          <h3>📌 Szczegóły zadania</h3>
-          <button class="btn-close-icon" (click)="closeDetails()">✕</button>
+          <span class="modal-category">Szczegóły zadania</span>
+          <button class="btn-close-circle" (click)="closeDetails()" title="Zamknij">✕</button>
         </div>
 
         <div class="modal-body">
-          <h2 class="detail-title">{{ selectedSession()?.title }}</h2>
+          <h2 class="ios-title">{{ selectedSession()?.title }}</h2>
 
-          <div class="detail-row">
-            <span class="detail-label">⏰ Termin:</span>
-            <span class="detail-value">
-              {{ selectedSession()?.startTime | date:'dd.MM.yyyy' }}, 
-              {{ selectedSession()?.startTime | date:'HH:mm' }} - {{ selectedSession()?.endTime | date:'HH:mm' }}
-            </span>
+          <!-- Komórki danych -->
+          <div class="ios-grouped-list">
+            <!-- Termin: Wczoraj / Dzisiaj / Jutro + godziny -->
+            <div class="ios-cell">
+              <div class="cell-icon time-icon">⏰</div>
+              <div class="cell-content">
+                <span class="cell-label">Termin</span>
+                <span class="cell-value">
+                  {{ formatSessionDate(selectedSession()?.startTime) }}, 
+                  {{ selectedSession()?.startTime | date:'HH:mm' }} – {{ selectedSession()?.endTime | date:'HH:mm' }}
+                </span>
+              </div>
+            </div>
+
+            <!-- Notatki -->
+            @if (selectedSession()?.description) {
+              <div class="ios-cell ios-cell-multiline">
+                <div class="cell-icon desc-icon">📝</div>
+                <div class="cell-content">
+                  <span class="cell-label">Notatki</span>
+                  <p class="cell-desc-text">{{ selectedSession()?.description }}</p>
+                </div>
+              </div>
+            }
+
+            <!-- Licznik przesunięć -->
+            @if (selectedSession()?.rescheduleCount && selectedSession()!.rescheduleCount! > 0) {
+              <div class="ios-cell">
+                <div class="cell-icon warning-icon">⚠️</div>
+                <div class="cell-content">
+                  <span class="cell-label">Status terminu</span>
+                  <span class="cell-badge-warning">
+                    Przełożono {{ selectedSession()?.rescheduleCount }}x
+                  </span>
+                </div>
+              </div>
+            }
           </div>
 
-          @if (selectedSession()?.description) {
-            <div class="detail-row">
-              <span class="detail-label">📝 Opis:</span>
-              <p class="detail-desc">{{ selectedSession()?.description }}</p>
-            </div>
-          }
-
-          @if (selectedSession()?.rescheduleCount && selectedSession()!.rescheduleCount! > 0) {
-            <div class="detail-row">
-              <span class="reschedule-badge-large">
-                ⚠️ Zadanie było przekładane: {{ selectedSession()?.rescheduleCount }}x
-              </span>
-            </div>
-          }
-
-          <!-- Sekcja edycji terminu (Reschedule wewnątrz modalu) -->
+          <!-- Sekcja edycji terminu (Reschedule) -->
           @if (isRescheduling()) {
-            <div class="reschedule-inline-box">
-              <h4>📅 Przesuń na inny termin:</h4>
+            <div class="ios-reschedule-card">
+              <h4>📅 Wybierz nowy termin</h4>
               <div class="form-row">
-                <label>Nowy Dzień:</label>
-                <input type="date" [(ngModel)]="rescheduleDate" class="input-control" />
+                <label>Dzień</label>
+                <input type="date" [(ngModel)]="rescheduleDate" class="ios-input" />
               </div>
               <div class="modal-grid-time">
                 <div>
-                  <label>Godzina Od:</label>
-                  <input type="time" [(ngModel)]="rescheduleStartTime" class="input-control" />
+                  <label>Początek</label>
+                  <input type="time" [(ngModel)]="rescheduleStartTime" class="ios-input" />
                 </div>
                 <div>
-                  <label>Godzina Do:</label>
-                  <input type="time" [(ngModel)]="rescheduleEndTime" class="input-control" />
+                  <label>Koniec</label>
+                  <input type="time" [(ngModel)]="rescheduleEndTime" class="ios-input" />
                 </div>
               </div>
               <div class="reschedule-actions">
-                <button class="btn-cancel" (click)="cancelReschedule()">Anuluj przesuwanie</button>
-                <button class="btn-confirm" (click)="submitReschedule()">Zapisz nowy termin</button>
+                <button class="ios-btn ios-btn-secondary" (click)="cancelReschedule()">Anuluj</button>
+                <button class="ios-btn ios-btn-primary" (click)="submitReschedule()">Zapisz</button>
               </div>
             </div>
           }
         </div>
 
-        <!-- Akcje w stopce modalu -->
+        <!-- Akcje w ułożeniu pionowym -->
         @if (!isRescheduling()) {
-          <div class="modal-actions-space">
-            <div class="status-action-btns">
-              @if (selectedSession()?.status === TaskSessionStatus.Planned) {
-                <button class="btn-action-lg btn-done" (click)="changeStatus(TaskSessionStatus.Completed)">
-                  ✓ Skończyłem
+          <div class="ios-actions-group">
+            
+            @if (selectedSession()?.status === TaskSessionStatus.Planned) {
+              <!-- Rząd 1: Dwa przyciski obok siebie -->
+              <div class="ios-buttons-row">
+                <button class="ios-action-btn btn-complete" (click)="changeStatus(TaskSessionStatus.Completed)">
+                  <span class="btn-symbol">✓</span> Skończone
                 </button>
-                <button class="btn-action-lg btn-miss" (click)="changeStatus(TaskSessionStatus.Missed)">
-                  ✗ Przegapiłem
+                <button class="ios-action-btn btn-missed" (click)="changeStatus(TaskSessionStatus.Missed)">
+                  <span class="btn-symbol">✕</span> Przegapione
                 </button>
-                <button class="btn-action-lg btn-reschedule" (click)="startReschedule()">
-                  ➡️ Przesuń...
-                </button>
-              } @else {
-                <button class="btn-action-lg btn-reset" (click)="changeStatus(TaskSessionStatus.Planned)">
-                  🔄 Przywróć do Zaplanowanych
-                </button>
-              }
-            </div>
+              </div>
 
-            <button class="btn-delete-link" (click)="deleteCurrentSession()">
-              🗑️ Usuń zadanie
+              <!-- Rząd 2: Podłużny przycisk przełożenia -->
+              <button class="ios-full-btn btn-reschedule" (click)="startReschedule()">
+                Przełóż zadanie
+              </button>
+            } @else {
+              <!-- Gdy zakończone/przegapione: przywrócenie -->
+              <button class="ios-full-btn btn-reset" (click)="changeStatus(TaskSessionStatus.Planned)">
+                🔄 Przywróć do zaplanowanych
+              </button>
+            }
+
+            <!-- Rząd 3: Podłużny przycisk usunięcia na samym dole -->
+            <button class="ios-full-btn btn-destructive" (click)="deleteCurrentSession()">
+              Usuń zadanie
             </button>
           </div>
         }
       </div>
     </div>
   }
-</div>

@@ -255,4 +255,24 @@ export class CalendarComponent implements OnInit {
       error: (err) => console.error('Błąd usuwania:', err)
     });
   }
+
+  formatSessionDate(startTime?: string | null): string {
+    if (!startTime) return '';
+    const date = new Date(startTime);
+    const today = new Date();
+    
+    const yesterday = new Date(today);
+    yesterday.setDate(today.getDate() - 1);
+
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+
+    const dateStr = date.toDateString();
+
+    if (dateStr === today.toDateString()) return 'Dzisiaj';
+    if (dateStr === yesterday.toDateString()) return 'Wczoraj';
+    if (dateStr === tomorrow.toDateString()) return 'Jutro';
+
+    return date.toLocaleDateString('pl-PL', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  }
 }
