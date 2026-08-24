@@ -1,4 +1,5 @@
 export enum TaskSessionStatus {
+  Unplanned = 0,
   Planned = 1,
   Completed = 2,
   Missed = 3
