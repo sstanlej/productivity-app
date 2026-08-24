@@ -75,18 +75,20 @@
         </div>
 
         <!-- Stopka akcji -->
+        <!-- Stopka akcji: 3 przyciski jeden pod drugim -->
         <div class="ios-actions-group">
-          <div class="modal-actions-space">
-            <button type="button" class="btn-cancel-link" (click)="closeScheduleModal()">
-              Anuluj
-            </button>
-            <button type="button" class="btn-submit-primary" (click)="submitSchedule()">
-              Wstaw do kalendarza
-            </button>
-          </div>
+          <!-- 1. Wstaw do kalendarza (niebieska obwódka, przezroczyste tło) -->
+          <button type="button" class="ios-full-btn btn-insert-outline" (click)="submitSchedule()">
+            Wstaw do kalendarza
+          </button>
 
-          <!-- Przycisk usuwania na samym dole -->
-          <button class="ios-full-btn btn-destructive" (click)="deleteCurrentSession()">
+          <!-- 2. Anuluj (szeroki szary przycisk) -->
+          <button type="button" class="ios-full-btn btn-cancel-full" (click)="closeScheduleModal()">
+            Anuluj
+          </button>
+
+          <!-- 3. Usuń zadanie (czerwony) -->
+          <button type="button" class="ios-full-btn btn-destructive" (click)="deleteCurrentSession()">
             Usuń zadanie
           </button>
         </div>

@@ -316,68 +316,58 @@
   border-right: 1px solid var(--border-color);
 }
 
+/* Układ 3 przycisków w pionie */
 .ios-actions-group {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-}
-
-.modal-actions-space {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  gap: 6px;
+  margin-top: 20px;
   border-top: 1px solid var(--border-color);
   padding-top: 16px;
-  margin-top: 4px;
-}
-
-.btn-cancel-link {
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 0.88rem;
-  font-weight: 600;
-  cursor: pointer;
-  padding: 8px 12px;
-  border-radius: 8px;
-  transition: all 0.15s ease;
-}
-
-.btn-cancel-link:hover {
-  background: var(--bg-column);
-  color: var(--text-main);
-}
-
-.btn-submit-primary {
-  background: var(--primary);
-  color: #ffffff;
-  border: none;
-  padding: 9px 20px;
-  border-radius: 8px;
-  font-weight: 600;
-  font-size: 0.88rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.btn-submit-primary:hover {
-  background: var(--primary-hover);
-  transform: translateY(-1px);
 }
 
 .ios-full-btn {
   width: 100%;
-  padding: 8px;
+  padding: 10px;
+  border-radius: 10px;
   font-size: 0.88rem;
   font-weight: 600;
   cursor: pointer;
-  background: none;
-  border: none;
-  border-radius: 8px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transition: all 0.15s ease;
 }
 
+/* 1. Przycisk wstawienia do kalendarza (niebieski outline, przezroczyste tło) */
+.btn-insert-outline {
+  background: transparent;
+  border: 1px solid var(--primary);
+  color: var(--primary);
+  padding: 12px;
+}
+
+.btn-insert-outline:hover {
+  background: rgba(37, 99, 235, 0.12);
+}
+
+/* 2. Przycisk Anuluj (bezramkowy szary) */
+.btn-cancel-full {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+}
+
+.btn-cancel-full:hover {
+  background: var(--bg-column);
+  color: var(--text-main);
+}
+
+/* 3. Przycisk usuwania (bezramkowy czerwony) */
 .btn-destructive {
+  background: none;
+  border: none;
   color: #ef4444;
 }
 
