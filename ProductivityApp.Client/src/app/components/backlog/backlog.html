@@ -1,62 +1,55 @@
-<aside class="backlog-container" (click)="closeMenu()">
+<aside class="backlog-wrapper" (click)="closeMenu()">
+  <!-- 4. Wycentrowany nagłówek Backlogu -->
   <div class="backlog-header">
     <div class="title-with-badge">
       <h3>📋 Backlog</h3>
       <span class="badge-count">{{ unplannedSessions().length }}</span>
     </div>
-    <button class="btn-toggle-form" (click)="toggleForm()">
-      {{ isFormOpen() ? '✕ Anuluj' : '➕ Dodaj zadanie' }}
-    </button>
   </div>
 
- <!-- Modal tworzenia zadania -->
-  @if (isFormOpen()) {
-    <app-task-form 
-      (sessionCreated)="onFormSessionCreated()" 
-      (formClosed)="isFormOpen.set(false)">
-    </app-task-form>
-  }
+  <!-- Boks rozciągnięty do samego dołu -->
+  <div class="backlog-box">
+    @if (isLoading()) {
+      <p class="loading-text">Ładowanie zadań...</p>
+    } @else if (unplannedSessions().length === 0) {
+      <div class="empty-state">
+        Brak zadań w kolejce. Użyj głównego przycisku <b>„➕ Dodaj nowe zadanie”</b>, aby dodać pomysł do realizacji!
+      </div>
+    } @else {
+      <div class="backlog-list">
+        @for (session of unplannedSessions(); track session.id) {
+          <div class="backlog-card">
+            <div class="card-header">
+              <span class="card-title">{{ session.title }}</span>
 
-  @if (isLoading()) {
-    <p class="loading-text">Ładowanie zadań...</p>
-  } @else if (unplannedSessions().length === 0) {
-    <div class="empty-state">
-      Brak zadań w kolejce. Kliknij <b>„➕ Dodaj zadanie”</b>, aby dodać nowe zadanie do zrobienia!
-    </div>
-  } @else {
-    <div class="backlog-list">
-      @for (session of unplannedSessions(); track session.id) {
-        <div class="backlog-card">
-          <div class="card-header">
-            <span class="card-title">{{ session.title }}</span>
+              <!-- Menu koła zębatego -->
+              <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
+                <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
+                  ⚙️
+                </button>
 
-            <!-- Menu koła zębatego -->
-            <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
-              <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
-                ⚙️
-              </button>
-
-              @if (activeMenuSessionId() === session.id) {
-                <div class="dropdown-menu">
-                  <button class="dropdown-item schedule" (click)="openScheduleModal(session)">
-                    📅 Zaplanuj w kalendarzu
-                  </button>
-                  <div class="dropdown-divider"></div>
-                  <button class="dropdown-item delete" (click)="deleteSession(session.id)">
-                    🗑️ Usuń
-                  </button>
-                </div>
-              }
+                @if (activeMenuSessionId() === session.id) {
+                  <div class="dropdown-menu">
+                    <button class="dropdown-item schedule" (click)="openScheduleModal(session)">
+                      📅 Zaplanuj w kalendarzu
+                    </button>
+                    <div class="dropdown-divider"></div>
+                    <button class="dropdown-item delete" (click)="deleteSession(session.id)">
+                      🗑️ Usuń
+                    </button>
+                  </div>
+                }
+              </div>
             </div>
-          </div>
 
-          @if (session.description) {
-            <p class="card-desc">{{ session.description }}</p>
-          }
-        </div>
-      }
-    </div>
-  }
+            @if (session.description) {
+              <p class="card-desc">{{ session.description }}</p>
+            }
+          </div>
+        }
+      </div>
+    }
+  </div>
 
   <!-- Modal Planowania w Kalendarzu -->
   @if (schedulingSession()) {

@@ -1,18 +1,36 @@
 <div class="app-layout">
+  <!-- Przycisk zmiany motywu w prawym górnym rogu -->
+  <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'">
+    {{ isDarkMode() ? '☀️ Tryb Jasny' : '🌙 Tryb Ciemny' }}
+  </button>
+
   <header class="app-header">
     <h1>🚀 Productivity App</h1>
-    <p>System zarządzania czasem i zadaniami</p>
+    <p>System zarządzania czasem i celami</p>
+
+    <!-- Główny, wyeksponowany przycisk w aplikacji -->
+    <button class="btn-hero-add" (click)="openTaskForm()">
+      ➕ Dodaj nowe zadanie
+    </button>
   </header>
 
   <main class="dashboard-grid">
-    <!-- Lewa kolumna: Tylko Kalendarz 3-dniowy -->
+    <!-- Lewa kolumna: Kalendarz 3-dniowy rozciągnięty do dołu -->
     <div class="main-column">
       <app-calendar></app-calendar>
     </div>
 
-    <!-- Prawa kolumna: Backlog z wbudowanym formularzem dodawania -->
+    <!-- Prawa kolumna: Backlog rozciągnięty do dołu -->
     <div class="sidebar-column">
       <app-backlog (taskScheduled)="onTaskScheduled()"></app-backlog>
     </div>
   </main>
+
+  <!-- Globalny modal tworzenia zadania -->
+  @if (isTaskFormOpen()) {
+    <app-task-form 
+      (sessionCreated)="onSessionCreated()" 
+      (formClosed)="closeTaskForm()">
+    </app-task-form>
+  }
 </div>

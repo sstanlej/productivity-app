@@ -29,7 +29,6 @@
                       ⏱️ {{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}
                     </span>
 
-                    <!-- Przycisk Koła Zębatego z Dropdownem -->
                     <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
                       <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
                         ⚙️
@@ -49,7 +48,6 @@
                             </button>
                             <div class="dropdown-divider"></div>
                           } @else {
-                            <!-- Gdy zadanie jest już zakończone/przegapione: tylko przywrócenie lub usunięcie -->
                             <button class="dropdown-item reset" (click)="changeStatus(session, TaskSessionStatus.Planned)">
                               🔄 Przywróć (Zaplanowane)
                             </button>
@@ -97,7 +95,7 @@
     </div>
   }
 
-  <!-- Modal Precyzyjnego Przesuwania -->
+  <!-- Modal Przesuwania -->
   @if (reschedulingSession()) {
     <div class="modal-backdrop" (click)="closeRescheduleModal()">
       <div class="modal-card" (click)="$event.stopPropagation()">

@@ -1,31 +1,89 @@
 .app-layout {
   max-width: 1440px;
-  margin: 20px auto;
-  padding: 0 20px;
-  font-family: system-ui, -apple-system, sans-serif;
+  min-height: 100vh;
+  margin: 0 auto;
+  padding: 24px 24px 32px 24px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* Przycisk motywu w prawym górnym rogu */
+.btn-theme-toggle {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: var(--card-shadow);
+  transition: all 0.2s;
+}
+
+.btn-theme-toggle:hover {
+  border-color: var(--primary);
+  transform: translateY(-1px);
 }
 
 .app-header {
-  margin-bottom: 20px;
+  text-align: center;
+  margin-bottom: 28px;
 }
 
 .app-header h1 {
   margin: 0;
-  font-size: 1.8rem;
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--text-main);
 }
 
 .app-header p {
-  margin: 4px 0 0 0;
-  color: #64748b;
-  font-size: 0.95rem;
+  margin: 6px 0 16px 0;
+  color: var(--text-muted);
+  font-size: 1rem;
 }
 
-/* Układ dwukolumnowy: Lewa 70%, Prawa 30% */
+/* Duży, wyrazisty przycisk akcji (Hero CTA) */
+.btn-hero-add {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 28px;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  transition: all 0.2s;
+}
+
+.btn-hero-add:hover {
+  background: var(--primary-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+}
+
+/* Układ dwukolumnowy dopasowany do dołu ekranu */
 .dashboard-grid {
   display: grid;
   grid-template-columns: 1fr 340px;
   gap: 24px;
-  align-items: start;
+  flex: 1;
+  align-items: stretch;
+}
+
+.main-column, .sidebar-column {
+  display: flex;
+  flex-direction: column;
 }
 
 @media (max-width: 1024px) {
