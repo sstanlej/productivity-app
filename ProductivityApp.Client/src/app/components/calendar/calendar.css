@@ -171,7 +171,7 @@
   box-sizing: border-box;
 }
 
-/* Kafelki zadań - estetyczne i kompaktowe */
+/* Kafelki zadań - bazowe */
 .session-card {
   position: absolute;
   left: 6px;
@@ -190,6 +190,7 @@
   gap: 3px;
   z-index: 5;
   transition: transform 0.15s ease, box-shadow 0.15s ease;
+  line-height: 1.2;
 }
 
 .session-card:hover {
@@ -209,6 +210,50 @@
   background: var(--card-missed-bg);
 }
 
+/* Wariant jednoliniowy dla krótkich zadań (<= 35 min) */
+.session-card.short-session-card {
+  padding: 4px 10px;
+  justify-content: center;
+}
+
+.short-card-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+}
+
+.short-card-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.short-card-left .card-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 700;
+  font-size: 0.84rem;
+  color: var(--text-main);
+}
+
+.card-bullet {
+  color: var(--text-muted);
+  font-weight: bold;
+}
+
+.short-card-left .card-time {
+  font-size: 0.74rem;
+  color: var(--text-muted);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Wariant dwuwierszowy (> 35 min) */
 .card-title {
   font-weight: 700;
   font-size: 0.85rem;
@@ -244,7 +289,7 @@
 .pill-missed { background: var(--pill-missed-bg); color: var(--pill-missed-text); }
 
 /* ===================================================
-   MODAL STYLES (Clean & Structured)
+   MODAL STYLES (Apple / iOS Inspired Clean)
    =================================================== */
 
 .modal-backdrop {
@@ -253,7 +298,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.65); /* Czyste przyciemnienie bez efektu blur */
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -457,7 +502,7 @@
 .ios-full-btn.btn-reschedule {
   background: none;
   border-color: transparent;
-  color: #eab308; /* Estetyczny żółty odcień */
+  color: #eab308;
   padding: 8px;
 }
 

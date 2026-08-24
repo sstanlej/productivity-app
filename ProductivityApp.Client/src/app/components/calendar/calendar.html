@@ -45,7 +45,7 @@
                 <div class="grid-line-block"></div>
               }
 
-              <!-- Kafelki zadań - minimalistyczne i klikalne -->
+              <!-- Kafelki zadań -->
               @for (session of day.sessions; track session.id) {
                 <div class="session-card" 
                      (click)="openDetails(session)"
@@ -54,31 +54,55 @@
                      [ngClass]="{
                        'status-completed': session.status === TaskSessionStatus.Completed,
                        'status-missed': session.status === TaskSessionStatus.Missed,
-                       'status-planned': session.status === TaskSessionStatus.Planned
+                       'status-planned': session.status === TaskSessionStatus.Planned,
+                       'short-session-card': isShortSession(session)
                      }"
                      title="Kliknij, aby zobaczyć szczegóły i opcje">
                   
-                  <!-- Linia 1: Tytuł -->
-                  <div class="card-title">{{ session.title }}</div>
+                  @if (isShortSession(session)) {
+                    <!-- UKŁAD JEDNOLINIOWY DLA KRÓTKICH ZADAŃ (<= 35 min) -->
+                    <div class="short-card-row">
+                      <div class="short-card-left">
+                        <span class="card-title">{{ session.title }}</span>
+                        <span class="card-bullet">·</span>
+                        <span class="card-time">{{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}</span>
+                      </div>
 
-                  <!-- Linia 2: Czas + Status -->
-                  <div class="card-meta">
-                    <span class="card-time">
-                      ⏱️ {{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}
-                    </span>
+                      <span class="status-pill" [ngClass]="{
+                        'pill-completed': session.status === TaskSessionStatus.Completed,
+                        'pill-missed': session.status === TaskSessionStatus.Missed,
+                        'pill-planned': session.status === TaskSessionStatus.Planned
+                      }">
+                        {{ 
+                          session.status === TaskSessionStatus.Completed ? 'Ukończono' : 
+                          session.status === TaskSessionStatus.Missed ? 'Niewykonane' : 'Zaplanowane' 
+                        }}
+                      </span>
+                    </div>
+                  } @else {
+                    <!-- UKŁAD DWUWIERSZOWY DLA DŁUŻSZYCH ZADAŃ (> 35 min) -->
+                    <div class="card-title">{{ session.title }}</div>
 
-                    <span class="status-pill" [ngClass]="{
-                      'pill-completed': session.status === TaskSessionStatus.Completed,
-                      'pill-missed': session.status === TaskSessionStatus.Missed,
-                      'pill-planned': session.status === TaskSessionStatus.Planned
-                    }">
-                      {{ 
-                        session.status === TaskSessionStatus.Completed ? 'Ukończono' : 
-                        session.status === TaskSessionStatus.Missed ? 'Niewykonane' : 'Zaplanowane' 
-                      }}
-                    </span>
-                  </div>
+                    <div class="card-meta">
+                      <span class="card-time">
+                        ⏱️ {{ session.startTime | date:'HH:mm' }} - {{ session.endTime | date:'HH:mm' }}
+                      </span>
+
+                      <span class="status-pill" [ngClass]="{
+                        'pill-completed': session.status === TaskSessionStatus.Completed,
+                        'pill-missed': session.status === TaskSessionStatus.Missed,
+                        'pill-planned': session.status === TaskSessionStatus.Planned
+                      }">
+                        {{ 
+                          session.status === TaskSessionStatus.Completed ? 'Ukończono' : 
+                          session.status === TaskSessionStatus.Missed ? 'Niewykonane' : 'Zaplanowane' 
+                        }}
+                      </span>
+                    </div>
+                  }
+
                 </div>
+              
               }
             </div>
           }

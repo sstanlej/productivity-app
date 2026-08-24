@@ -157,13 +157,22 @@ export class CalendarComponent implements OnInit {
   }
 
   // Wysokość kafelka w pikselach
-  getHeight(session: TaskSession): number {
-    if (!session.startTime || !session.endTime) return 46;
-    const start = new Date(session.startTime);
-    const end = new Date(session.endTime);
-    const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
-    return Math.max(diffInMinutes * this.pixelsPerMinute, 46); // Minimum 46px dla estetyki 2 linii
-  }
+    isShortSession(session: TaskSession): boolean {
+      if (!session.startTime || !session.endTime) return false;
+      const diff = (new Date(session.endTime).getTime() - new Date(session.startTime).getTime()) / (1000 * 60);
+      return diff <= 35;
+    }
+
+    // Wysokość kafelka
+    getHeight(session: TaskSession): number {
+      if (!session.startTime || !session.endTime) return 38;
+      const start = new Date(session.startTime);
+      const end = new Date(session.endTime);
+      const diffInMinutes = (end.getTime() - start.getTime()) / (1000 * 60);
+      
+      // Dla 15 min = 38px, dla 30 min = 60px, dla 1h = 120px
+      return Math.max(diffInMinutes * this.pixelsPerMinute, 38);
+    }
 
   // Otwarcie Modalu Szczegółów po kliknięciu w kafelek
   openDetails(session: TaskSession): void {
