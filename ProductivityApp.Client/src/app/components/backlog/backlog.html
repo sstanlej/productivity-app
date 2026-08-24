@@ -1,50 +1,31 @@
-<aside class="backlog-wrapper" (click)="closeMenu()">
+<aside class="backlog-wrapper">
   <!-- Główny nagłówek na poziomie nagłówka kalendarza -->
   <div class="backlog-header">
     <h3>📋 Backlog</h3>
   </div>
 
-  <!-- Szary kontener rozciągnięty do dołu z nagłówkiem identycznym jak kolumny dni -->
+  <!-- Szary kontener zadań -->
   <div class="backlog-box">
-    <!-- Punkt 6: Nagłówek 'Niezaplanowane zadania' z licznikiem -->
     <div class="backlog-inner-header">
       <div class="title-row">
         <h4>Niezaplanowane zadania</h4>
         <span class="badge-count">{{ unplannedSessions().length }}</span>
       </div>
-      <span class="subtitle-text">Poczekalnia</span>
+      <span class="subtitle-text">Kliknij zadanie, aby je zaplanować</span>
     </div>
 
     @if (isLoading()) {
       <p class="loading-text">Ładowanie zadań...</p>
     } @else if (unplannedSessions().length === 0) {
       <div class="empty-state">
-        Brak zadań w kolejce. Użyj głównego przycisku <b>„➕ Dodaj nowe zadanie”</b>, aby dodać pomysł do realizacji!
+        Brak zadań w kolejce. Użyj przycisku <b>„➕ Dodaj zadanie”</b> na górze strony!
       </div>
     } @else {
       <div class="backlog-list">
         @for (session of unplannedSessions(); track session.id) {
-          <div class="backlog-card">
+          <div class="backlog-card" (click)="openScheduleModal(session)" title="Kliknij, aby zaplanować w kalendarzu">
             <div class="card-header">
               <span class="card-title">{{ session.title }}</span>
-
-              <div class="gear-menu-wrapper" (click)="$event.stopPropagation()">
-                <button class="btn-gear" (click)="toggleMenu(session.id, $event)" title="Opcje zadania">
-                  ⚙️
-                </button>
-
-                @if (activeMenuSessionId() === session.id) {
-                  <div class="dropdown-menu">
-                    <button class="dropdown-item schedule" (click)="openScheduleModal(session)">
-                      📅 Zaplanuj w kalendarzu
-                    </button>
-                    <div class="dropdown-divider"></div>
-                    <button class="dropdown-item delete" (click)="deleteSession(session.id)">
-                      🗑️ Usuń
-                    </button>
-                  </div>
-                }
-              </div>
             </div>
 
             @if (session.description) {
@@ -56,35 +37,60 @@
     }
   </div>
 
-  <!-- Modal Planowania w Kalendarzu -->
-  @if (schedulingSession()) {
+  <!-- MODAL PLANOWANIA / SZCZEGÓŁÓW ZADANIA Z BACKLOGU (APPLE / iOS STYLE) -->
+  @if (selectedSession()) {
     <div class="modal-backdrop" (click)="closeScheduleModal()">
-      <div class="modal-card" (click)="$event.stopPropagation()">
-        <h3>📅 Zaplanuj: "{{ schedulingSession()?.title }}"</h3>
-        <p class="modal-subtitle">Wybierz dzień i ramy czasowe w kalendarzu.</p>
+      <div class="modal-card ios-modal" (click)="$event.stopPropagation()">
+        
+        <div class="modal-header">
+          <span class="modal-category">Zaplanuj wydarzenie</span>
+          <button class="btn-close-circle" (click)="closeScheduleModal()" title="Zamknij">✕</button>
+        </div>
 
-        <div class="modal-form">
-          <div class="modal-row">
-            <label>Dzień:</label>
-            <input type="date" [(ngModel)]="scheduleDate" class="input-control" />
-          </div>
+        <div class="modal-body">
+          <!-- Tytuł + Opis bezpośrednio pod nim -->
+          <h2 class="ios-title">{{ selectedSession()?.title }}</h2>
+          @if (selectedSession()?.description) {
+            <p class="ios-subtitle-desc">{{ selectedSession()?.description }}</p>
+          }
 
-          <div class="modal-grid-time">
-            <div>
-              <label>Godzina Od:</label>
-              <input type="time" [(ngModel)]="scheduleStartTime" class="input-control" />
+          <!-- Sekcja wyboru terminu w stylu iOS -->
+          <div class="ios-grouped-list">
+            <div class="ios-cell-input">
+              <label class="cell-label">Dzień</label>
+              <input type="date" [(ngModel)]="scheduleDate" class="ios-field-control" />
             </div>
-            <div>
-              <label>Godzina Do:</label>
-              <input type="time" [(ngModel)]="scheduleEndTime" class="input-control" />
-            </div>
-          </div>
 
-          <div class="modal-actions">
-            <button class="btn-cancel" (click)="closeScheduleModal()">Anuluj</button>
-            <button class="btn-confirm" (click)="submitSchedule()">Wstaw do kalendarza</button>
+            <div class="ios-time-grid">
+              <div class="ios-cell-input">
+                <label class="cell-label">Początek</label>
+                <input type="time" [(ngModel)]="scheduleStartTime" class="ios-field-control" />
+              </div>
+              <div class="ios-cell-input">
+                <label class="cell-label">Koniec</label>
+                <input type="time" [(ngModel)]="scheduleEndTime" class="ios-field-control" />
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- Stopka akcji -->
+        <div class="ios-actions-group">
+          <div class="modal-actions-space">
+            <button type="button" class="btn-cancel-link" (click)="closeScheduleModal()">
+              Anuluj
+            </button>
+            <button type="button" class="btn-submit-primary" (click)="submitSchedule()">
+              Wstaw do kalendarza
+            </button>
+          </div>
+
+          <!-- Przycisk usuwania na samym dole -->
+          <button class="ios-full-btn btn-destructive" (click)="deleteCurrentSession()">
+            Usuń zadanie
+          </button>
+        </div>
+
       </div>
     </div>
   }

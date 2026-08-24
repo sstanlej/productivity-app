@@ -3,12 +3,11 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { SessionService } from '../../services/session.service';
 import { TaskSession, TaskSessionStatus } from '../../core/models/session.model';
-import { TaskFormComponent } from '../task-form/task-form';
 
 @Component({
   selector: 'app-backlog',
   standalone: true,
-  imports: [CommonModule, FormsModule, TaskFormComponent],
+  imports: [CommonModule, FormsModule],
   templateUrl: './backlog.html',
   styleUrl: './backlog.css'
 })
@@ -19,28 +18,15 @@ export class BacklogComponent implements OnInit {
 
   unplannedSessions = signal<TaskSession[]>([]);
   isLoading = signal<boolean>(true);
-  isFormOpen = signal<boolean>(false);
 
-  activeMenuSessionId = signal<number | null>(null);
-
-  // Stan modalu planowania
-  schedulingSession = signal<TaskSession | null>(null);
+  // Stan modalu planowania i szczegółów
+  selectedSession = signal<TaskSession | null>(null);
   scheduleDate: string = new Date().toISOString().substring(0, 10);
   scheduleStartTime: string = '12:00';
   scheduleEndTime: string = '13:00';
 
   ngOnInit(): void {
     this.loadUnplannedSessions();
-  }
-
-  toggleForm(): void {
-    this.isFormOpen.update(v => !v);
-  }
-
-  onFormSessionCreated(): void {
-    this.isFormOpen.set(false);
-    this.loadUnplannedSessions();
-    this.taskScheduled.emit();
   }
 
   loadUnplannedSessions(): void {
@@ -56,28 +42,20 @@ export class BacklogComponent implements OnInit {
     });
   }
 
-  toggleMenu(sessionId?: number, event?: Event): void {
-    if (event) event.stopPropagation();
-    if (!sessionId) return;
-    this.activeMenuSessionId.update(current => current === sessionId ? null : sessionId);
-  }
-
-  closeMenu(): void {
-    this.activeMenuSessionId.set(null);
-  }
-
+  // Otwarcie modalu po kliknięciu w kafelek
   openScheduleModal(session: TaskSession): void {
-    this.closeMenu();
-    this.schedulingSession.set(session);
+    this.selectedSession.set(session);
     this.scheduleDate = new Date().toISOString().substring(0, 10);
+    this.scheduleStartTime = '12:00';
+    this.scheduleEndTime = '13:00';
   }
 
   closeScheduleModal(): void {
-    this.schedulingSession.set(null);
+    this.selectedSession.set(null);
   }
 
   submitSchedule(): void {
-    const session = this.schedulingSession();
+    const session = this.selectedSession();
     if (!session?.id || !this.scheduleDate || !this.scheduleStartTime || !this.scheduleEndTime) return;
 
     const startIso = new Date(`${this.scheduleDate}T${this.scheduleStartTime}:00`).toISOString();
@@ -103,14 +81,16 @@ export class BacklogComponent implements OnInit {
     });
   }
 
-  deleteSession(id?: number): void {
-    if (!id) return;
-    this.closeMenu();
-    if (!confirm('Czy na pewno chcesz usunąć to zadanie?')) return;
+  deleteCurrentSession(): void {
+    const session = this.selectedSession();
+    if (!session?.id) return;
+    if (!confirm('Czy na pewno chcesz usunąć to zadanie z backlogu?')) return;
 
-    this.sessionService.deleteSession(id).subscribe({
+    this.sessionService.deleteSession(session.id).subscribe({
       next: () => {
-        this.unplannedSessions.update(list => list.filter(s => s.id !== id));
+        const deletedId = session.id;
+        this.closeScheduleModal();
+        this.unplannedSessions.update(list => list.filter(s => s.id !== deletedId));
       },
       error: (err) => console.error('Błąd usuwania zadania:', err)
     });

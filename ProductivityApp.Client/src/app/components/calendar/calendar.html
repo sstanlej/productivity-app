@@ -118,12 +118,16 @@
         
         <!-- Nagłówek -->
         <div class="modal-header">
-          <span class="modal-category">Szczegóły zadania</span>
+          <span class="modal-category">Szczegóły wydarzenia</span>
           <button class="btn-close-circle" (click)="closeDetails()" title="Zamknij">✕</button>
         </div>
 
         <div class="modal-body">
+          <!-- Tytuł + Opis bezpośrednio pod nim -->
           <h2 class="ios-title">{{ selectedSession()?.title }}</h2>
+          @if (selectedSession()?.description) {
+            <p class="ios-subtitle-desc">{{ selectedSession()?.description }}</p>
+          }
 
           <!-- Komórki danych -->
           <div class="ios-grouped-list">
@@ -138,17 +142,6 @@
                 </span>
               </div>
             </div>
-
-            <!-- Notatki -->
-            @if (selectedSession()?.description) {
-              <div class="ios-cell ios-cell-multiline">
-                <div class="cell-icon desc-icon">📝</div>
-                <div class="cell-content">
-                  <span class="cell-label">Notatki</span>
-                  <p class="cell-desc-text">{{ selectedSession()?.description }}</p>
-                </div>
-              </div>
-            }
 
             <!-- Licznik przesunięć -->
             @if (selectedSession()?.rescheduleCount && selectedSession()!.rescheduleCount! > 0) {
@@ -205,7 +198,7 @@
                 </button>
               </div>
 
-              <!-- Rząd 2: Podłużny przycisk przełożenia -->
+              <!-- Rząd 2: Podłużny, bezramkowy żółty przycisk przełożenia -->
               <button class="ios-full-btn btn-reschedule" (click)="startReschedule()">
                 Przełóż zadanie
               </button>

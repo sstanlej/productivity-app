@@ -31,7 +31,7 @@
   color: var(--text-main);
 }
 
-/* Elastyczny boks Backlogu z własnym scrollem jeśli zadań jest dużo */
+/* Elastyczny kontener Backlogu */
 .backlog-box {
   background: var(--bg-column);
   border: 1px solid var(--border-color);
@@ -67,6 +67,7 @@
   margin-bottom: 12px;
   flex-shrink: 0;
 }
+
 .title-row {
   display: flex;
   align-items: center;
@@ -76,23 +77,23 @@
 
 .title-row h4 {
   margin: 0;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   font-weight: 700;
   color: var(--text-main);
 }
 
 .subtitle-text {
   color: var(--text-muted);
-  font-size: 0.85rem;
+  font-size: 0.78rem;
 }
 
 .badge-count {
   background: var(--bg-card);
   color: var(--text-main);
   border: 1px solid var(--border-color);
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: bold;
-  padding: 1px 7px;
+  padding: 1px 6px;
   border-radius: 12px;
 }
 
@@ -111,117 +112,275 @@
   flex: 1;
 }
 
+/* Klikalne kafelki w Backlogu */
 .backlog-card {
   background: var(--bg-card);
   border: 1px solid var(--border-color);
   border-radius: 6px;
-  padding: 10px 12px;
+  padding: 12px;
   box-shadow: var(--card-shadow);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.backlog-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary);
 }
 
 .card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 8px;
 }
 
 .card-title {
-  font-weight: 600;
+  font-weight: 700;
   font-size: 0.9rem;
   color: var(--text-main);
 }
 
 .card-desc {
-  margin: 4px 0 0 0;
-  font-size: 0.8rem;
-  color: var(--text-muted);
-}
-
-.gear-menu-wrapper {
-  position: relative;
-}
-
-.btn-gear {
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 2px 4px;
-  font-size: 0.85rem;
-  border-radius: 4px;
-}
-
-.btn-gear:hover {
-  background: var(--bg-column);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-  min-width: 170px;
-  z-index: 100;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-}
-
-.dropdown-item {
-  background: none;
-  border: none;
-  padding: 8px 12px;
-  text-align: left;
+  margin: 6px 0 0 0;
   font-size: 0.82rem;
-  cursor: pointer;
-  width: 100%;
-  color: var(--text-main);
+  color: var(--text-muted);
+  line-height: 1.35;
 }
 
-.dropdown-item:hover {
-  background: var(--bg-column);
-}
+/* ===================================================
+   MODAL STYLES (APPLE / iOS INSET GROUPED)
+   =================================================== */
 
-.dropdown-item.schedule { color: var(--primary); font-weight: 600; }
-.dropdown-item.delete { color: #ef4444; }
-.dropdown-divider { height: 1px; background: var(--border-color); }
-
-/* Modal */
 .modal-backdrop {
   position: fixed;
   top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.65);
   display: flex;
   justify-content: center;
   align-items: center;
   z-index: 1000;
-  backdrop-filter: blur(3px);
 }
 
-.modal-card {
+.ios-modal {
   background: var(--bg-card);
   color: var(--text-main);
-  padding: 20px;
-  border-radius: 8px;
+  padding: 22px 24px;
+  border-radius: 16px;
   width: 90%;
-  max-width: 380px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  max-width: 420px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
   border: 1px solid var(--border-color);
+  box-sizing: border-box;
 }
 
-.modal-card h3 { margin: 0 0 4px 0; font-size: 1rem; }
-.modal-subtitle { font-size: 0.8rem; color: var(--text-muted); margin: 0 0 14px 0; }
-.modal-row { margin-bottom: 10px; }
-.modal-row label, .modal-grid-time label { display: block; font-size: 0.75rem; font-weight: 500; color: var(--text-muted); margin-bottom: 2px; }
-.modal-grid-time { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
-.input-control { width: 100%; padding: 6px 8px; background: var(--bg-page); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 0.85rem; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 8px; }
-.btn-cancel { background: var(--bg-column); color: var(--text-main); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.85rem; }
-.btn-confirm { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
-.btn-confirm:hover { background: var(--primary-hover); }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 6px;
+}
+
+.modal-category {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.btn-close-circle {
+  background: var(--bg-column);
+  border: 1px solid var(--border-color);
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--text-muted);
+  transition: all 0.15s ease;
+}
+
+.btn-close-circle:hover {
+  background: var(--border-color);
+  color: var(--text-main);
+}
+
+.ios-title {
+  margin: 4px 0 4px 0;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  line-height: 1.25;
+}
+
+.ios-subtitle-desc {
+  margin: 0 0 16px 0;
+  font-size: 0.88rem;
+  color: var(--text-muted);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.ios-grouped-list {
+  background: var(--bg-column);
+  border-radius: 12px;
+  border: 1px solid var(--border-color);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+
+.ios-cell {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ios-cell:last-child {
+  border-bottom: none;
+}
+
+.ios-cell-multiline {
+  align-items: flex-start;
+}
+
+.cell-icon {
+  font-size: 1rem;
+  line-height: 1;
+  padding-top: 2px;
+}
+
+.cell-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+}
+
+.cell-label {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--text-muted);
+}
+
+.cell-desc-text {
+  margin: 2px 0 0 0;
+  font-size: 0.88rem;
+  color: var(--text-main);
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.ios-cell-input {
+  padding: 10px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.ios-cell-input:last-child {
+  border-bottom: none;
+}
+
+.ios-field-control {
+  width: 100%;
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+}
+
+.ios-time-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.ios-time-grid .ios-cell-input:first-child {
+  border-right: 1px solid var(--border-color);
+}
+
+.ios-actions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.modal-actions-space {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  margin-top: 4px;
+}
+
+.btn-cancel-link {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.btn-cancel-link:hover {
+  background: var(--bg-column);
+  color: var(--text-main);
+}
+
+.btn-submit-primary {
+  background: var(--primary);
+  color: #ffffff;
+  border: none;
+  padding: 9px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.88rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-submit-primary:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.ios-full-btn {
+  width: 100%;
+  padding: 8px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  background: none;
+  border: none;
+  border-radius: 8px;
+  transition: all 0.15s ease;
+}
+
+.btn-destructive {
+  color: #ef4444;
+}
+
+.btn-destructive:hover {
+  background: rgba(239, 68, 68, 0.08);
+}
