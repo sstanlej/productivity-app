@@ -1,0 +1,135 @@
+.calendar-container {
+  margin-top: 24px;
+}
+
+.calendar-header {
+  margin-bottom: 16px;
+}
+
+.grid-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.day-column {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px;
+  min-height: 380px;
+}
+
+.day-column.today-column {
+  background: #ffffff;
+  border: 2px solid #3b82f6;
+}
+
+.day-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+
+.day-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.day-date {
+  color: #64748b;
+  font-size: 0.85rem;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-state {
+  color: #94a3b8;
+  font-size: 0.9rem;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.session-card {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-left: 4px solid #3b82f6;
+  border-radius: 6px;
+  padding: 12px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.session-card.status-completed {
+  border-left-color: #10b981;
+  background: #f0fdf4;
+}
+
+.session-card.status-missed {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+
+.session-time {
+  font-size: 0.75rem;
+  font-weight: bold;
+  color: #475569;
+}
+
+.session-title {
+  font-weight: 600;
+  margin: 4px 0;
+  color: #0f172a;
+}
+
+.session-desc {
+  font-size: 0.85rem;
+  color: #64748b;
+  margin-bottom: 6px;
+}
+
+.reschedule-badge {
+  font-size: 0.75rem;
+  color: #d97706;
+  background: #fef3c7;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+
+.session-actions {
+  display: flex;
+  gap: 6px;
+  margin-top: 8px;
+  align-items: center;
+}
+
+.btn-action {
+  border: 1px solid #cbd5e1;
+  background: white;
+  border-radius: 4px;
+  padding: 4px 8px;
+  cursor: pointer;
+  font-size: 0.85rem;
+}
+
+.btn-action:hover {
+  background: #f1f5f9;
+}
+
+.btn-complete { color: #10b981; }
+.btn-missed { color: #ef4444; }
+.btn-reschedule { color: #3b82f6; }
+.btn-delete { margin-left: auto; color: #64748b; }
+
+.status-label {
+  font-size: 0.8rem;
+  font-weight: bold;
+}
