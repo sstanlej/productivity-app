@@ -18,7 +18,7 @@
   justify-content: center;
   align-items: center;
   height: 38px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
 }
 
 .calendar-header h2 {
@@ -26,57 +26,41 @@
   font-size: 1.25rem;
   font-weight: 700;
   color: var(--text-main);
-  text-align: center;
 }
 
-/* Układ siatki: Focus na środkowej kolumnie Dzisiaj (szersza) */
-.grid-columns {
+.calendar-sticky-headers {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 12px;
+  margin-bottom: 8px;
+  padding-right: 8px;
+}
+
+.time-axis-spacer {
+  width: 55px;
+}
+
+.header-columns {
   display: grid;
   grid-template-columns: 0.88fr 1.24fr 0.88fr;
   gap: 16px;
-  flex: 1;
-  height: 100%;
-  align-items: stretch;
 }
 
-/* Bazowy styl dla bocznych kolumn (Wczoraj, Jutro) - nieco niższe i subtelniejsze */
-.day-column {
+.day-header-cell {
   background: var(--bg-column);
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  padding: 12px;
-  display: flex;
-  flex-direction: column;
-  flex: 1;
-  box-sizing: border-box;
-  margin-top: 14px;
-  margin-bottom: 14px;
-  opacity: 0.94;
-  transition: all 0.25s ease;
-}
-
-/* Główny Focus: Kolumna Dzisiaj (pełna wysokość, bez marginesów pionowych) */
-.day-column.today-column {
-  background: var(--bg-card);
-  border: 2px solid var(--primary);
-  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.12);
-  margin-top: 0;
-  margin-bottom: 0;
-  padding: 16px;
-  opacity: 1;
-  z-index: 2;
-}
-
-/* Nagłówki dni */
-.day-header {
+  padding: 8px 12px;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 8px;
-  margin-bottom: 12px;
+}
+
+.day-header-cell.today-header {
+  background: var(--bg-card);
+  border: 2px solid var(--primary);
 }
 
 .day-title-row {
@@ -86,19 +70,16 @@
   margin-bottom: 2px;
 }
 
-/* Mniejszy nagłówek w bocznych kolumnach */
-.day-column h3 {
+.day-header-cell h3 {
   margin: 0;
-  font-size: 0.98rem;
-  font-weight: 600;
-  color: var(--text-muted);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-main);
 }
 
-/* Większy, wyróżniony nagłówek w kolumnie Dzisiaj */
-.day-column.today-column h3 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  color: var(--text-main);
+.day-header-cell.today-header h3 {
+  font-size: 1.05rem;
+  color: var(--primary);
 }
 
 .badge-count {
@@ -113,51 +94,109 @@
 
 .day-date {
   color: var(--text-muted);
-  font-size: 0.8rem;
+  font-size: 0.78rem;
 }
 
-.day-column.today-column .day-date {
-  font-size: 0.85rem;
-  color: var(--primary);
-  font-weight: 500;
+/* Przewijalny kontener siatki */
+.timeline-scroll-container {
+  flex: 1;
+  max-height: calc(100vh - 250px);
+  overflow-y: auto;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  background: var(--bg-card);
+  padding: 0 8px 16px 0;
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
-.sessions-list {
+.timeline-scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+.timeline-scroll-container::-webkit-scrollbar-track {
+  background: var(--bg-column);
+}
+.timeline-scroll-container::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.timeline-body {
+  display: grid;
+  grid-template-columns: 55px 1fr;
+  gap: 12px;
+  position: relative;
+  padding-top: 10px;
+}
+
+.time-axis {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  flex: 1;
 }
 
-.day-column.today-column .sessions-list {
-  gap: 12px;
-}
-
-.empty-state {
+/* Blok 2-godzinny = 240px przy skali 2px/min */
+.time-slot-label {
+  height: 240px;
+  box-sizing: border-box;
+  text-align: right;
+  padding-right: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
   color: var(--text-muted);
-  font-size: 0.85rem;
-  text-align: center;
-  margin-top: 50px;
+  transform: translateY(-8px);
 }
 
-/* Kafelki zadań w bocznych kolumnach (subtelnie mniejsze) */
+.grid-columns {
+  display: grid;
+  grid-template-columns: 0.88fr 1.24fr 0.88fr;
+  gap: 16px;
+  position: relative;
+}
+
+.day-column {
+  background: var(--bg-column);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.day-column.today-column {
+  background: rgba(37, 99, 235, 0.03);
+  border: 2px solid var(--primary);
+}
+
+.grid-line-block {
+  height: 240px;
+  border-bottom: 1px dashed var(--border-color);
+  box-sizing: border-box;
+}
+
+/* Kafelki zadań - estetyczne i kompaktowe */
 .session-card {
+  position: absolute;
+  left: 6px;
+  right: 6px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
-  border-left: 3px solid var(--border-color);
+  border-left: 4px solid var(--primary);
   border-radius: 6px;
-  padding: 9px 10px;
-  box-shadow: var(--card-shadow);
-  position: relative;
-  font-size: 0.85rem;
+  padding: 6px 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  box-sizing: border-box;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 3px;
+  z-index: 5;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 
-/* Kafelki zadań w kolumnie Dzisiaj (pełny rozmiar) */
-.day-column.today-column .session-card {
-  padding: 12px;
-  border-left-width: 4px;
-  border-left-color: var(--primary);
-  font-size: 0.9rem;
+.session-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+  border-color: var(--primary);
 }
 
 .session-card.status-completed {
@@ -170,138 +209,41 @@
   background: var(--card-missed-bg);
 }
 
-.session-top-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 4px;
-}
-
-.session-time {
-  font-size: 0.72rem;
-  font-weight: bold;
-  color: var(--text-muted);
-}
-
-.day-column.today-column .session-time {
-  font-size: 0.76rem;
-}
-
-.gear-menu-wrapper {
-  position: relative;
-}
-
-.btn-gear {
-  background: none;
-  border: 1px solid transparent;
-  cursor: pointer;
-  padding: 1px 4px;
-  font-size: 0.8rem;
-  border-radius: 4px;
-}
-
-.day-column.today-column .btn-gear {
-  padding: 2px 6px;
-  font-size: 0.9rem;
-}
-
-.btn-gear:hover {
-  background: var(--bg-column);
-}
-
-.dropdown-menu {
-  position: absolute;
-  top: 100%;
-  right: 0;
-  background: var(--bg-card);
-  border: 1px solid var(--border-color);
-  border-radius: 6px;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.35);
-  min-width: 160px;
-  z-index: 100;
+.card-title {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-meta {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
 }
 
-.dropdown-item {
-  background: none;
-  border: none;
-  padding: 8px 12px;
-  text-align: left;
-  font-size: 0.85rem;
-  cursor: pointer;
-  width: 100%;
-  color: var(--text-main);
-}
-
-.dropdown-item:hover {
-  background: var(--bg-column);
-}
-
-.dropdown-item.done { color: #10b981; font-weight: 600; }
-.dropdown-item.miss { color: #ef4444; font-weight: 600; }
-.dropdown-item.reschedule { color: var(--primary); font-weight: 600; }
-.dropdown-item.reset { color: var(--text-muted); font-weight: 600; }
-.dropdown-item.delete { color: #ef4444; }
-.dropdown-divider { height: 1px; background: var(--border-color); }
-
-.session-title {
+.card-time {
+  font-size: 0.72rem;
   font-weight: 600;
-  margin: 2px 0;
-  color: var(--text-main);
-  font-size: 0.88rem;
-}
-
-.day-column.today-column .session-title {
-  font-size: 0.95rem;
-  margin: 4px 0;
-}
-
-.session-desc {
-  font-size: 0.78rem;
   color: var(--text-muted);
-  margin-bottom: 4px;
-}
-
-.day-column.today-column .session-desc {
-  font-size: 0.85rem;
-  margin-bottom: 6px;
-}
-
-.reschedule-badge {
-  font-size: 0.68rem;
-  color: var(--badge-reschedule-text);
-  background: var(--badge-reschedule-bg);
-  padding: 2px 5px;
-  border-radius: 4px;
-  display: inline-block;
-  margin-bottom: 4px;
-  font-weight: 600;
-}
-
-.status-footer {
-  margin-top: 4px;
 }
 
 .status-pill {
-  font-size: 0.65rem;
-  font-weight: 600;
+  font-size: 0.62rem;
+  font-weight: 700;
   padding: 1px 6px;
-  border-radius: 12px;
+  border-radius: 10px;
   text-transform: uppercase;
-}
-
-.day-column.today-column .status-pill {
-  font-size: 0.7rem;
-  padding: 2px 8px;
 }
 
 .pill-planned { background: #1e3a8a; color: #93c5fd; }
 .pill-completed { background: var(--pill-completed-bg); color: var(--pill-completed-text); }
 .pill-missed { background: var(--pill-missed-bg); color: var(--pill-missed-text); }
 
-/* Modal */
+/* MODAL SZCZEGÓŁÓW ZADANIA */
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -320,20 +262,196 @@
   background: var(--bg-card);
   color: var(--text-main);
   padding: 24px;
-  border-radius: 10px;
+  border-radius: 12px;
   width: 90%;
-  max-width: 420px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+  max-width: 480px;
+  box-shadow: 0 12px 36px rgba(0,0,0,0.5);
   border: 1px solid var(--border-color);
 }
 
-.modal-card h3 { margin: 0 0 6px 0; font-size: 1.1rem; }
-.modal-subtitle { font-size: 0.85rem; color: var(--text-muted); margin: 0 0 16px 0; }
-.modal-row { margin-bottom: 12px; }
-.modal-row label, .modal-grid-time label { display: block; font-size: 0.8rem; font-weight: 500; color: var(--text-muted); margin-bottom: 4px; }
-.modal-grid-time { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
-.input-control { width: 100%; padding: 8px 10px; background: var(--bg-page); color: var(--text-main); border: 1px solid var(--border-color); border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 0.9rem; }
-.modal-actions { display: flex; justify-content: flex-end; gap: 10px; }
-.btn-cancel { background: var(--bg-column); color: var(--text-main); border: 1px solid var(--border-color); padding: 8px 14px; border-radius: 6px; cursor: pointer; font-weight: 500; }
-.btn-confirm { background: var(--primary); color: white; border: none; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 600; }
-.btn-confirm:hover { background: var(--primary-hover); }
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+  margin-bottom: 16px;
+}
+
+.modal-header h3 {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+.btn-close-icon {
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+
+.detail-title {
+  margin: 0 0 16px 0;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.detail-row {
+  margin-bottom: 12px;
+}
+
+.detail-label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: 6px;
+}
+
+.detail-value {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.detail-desc {
+  background: var(--bg-column);
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  margin-top: 6px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.reschedule-badge-large {
+  display: inline-block;
+  background: var(--badge-reschedule-bg);
+  color: var(--badge-reschedule-text);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.reschedule-inline-box {
+  background: var(--bg-column);
+  border: 1px solid var(--border-color);
+  padding: 14px;
+  border-radius: 8px;
+  margin-top: 14px;
+}
+
+.reschedule-inline-box h4 {
+  margin: 0 0 10px 0;
+  font-size: 0.95rem;
+}
+
+.form-row {
+  margin-bottom: 10px;
+}
+
+.form-row label, .modal-grid-time label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-bottom: 3px;
+}
+
+.modal-grid-time {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.input-control {
+  width: 100%;
+  padding: 8px 10px;
+  background: var(--bg-page);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  box-sizing: border-box;
+  font-family: inherit;
+  font-size: 0.88rem;
+}
+
+.reschedule-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.modal-actions-space {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-top: 1px solid var(--border-color);
+  padding-top: 16px;
+  margin-top: 20px;
+}
+
+.status-action-btns {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-action-lg {
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  color: var(--text-main);
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-done { color: #10b981; border-color: #10b981; }
+.btn-done:hover { background: rgba(16, 185, 129, 0.15); }
+
+.btn-miss { color: #ef4444; border-color: #ef4444; }
+.btn-miss:hover { background: rgba(239, 68, 68, 0.15); }
+
+.btn-reschedule { color: var(--primary); border-color: var(--primary); }
+.btn-reschedule:hover { background: rgba(37, 99, 235, 0.15); }
+
+.btn-reset { color: var(--text-muted); }
+.btn-reset:hover { background: var(--bg-column); }
+
+.btn-delete-link {
+  background: none;
+  border: none;
+  color: #ef4444;
+  font-size: 0.85rem;
+  cursor: pointer;
+  padding: 4px 8px;
+}
+
+.btn-delete-link:hover {
+  text-decoration: underline;
+}
+
+.btn-cancel {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-confirm {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+}

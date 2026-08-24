@@ -1,26 +1,29 @@
 <div class="app-layout">
-  <!-- Przycisk zmiany motywu w prawym górnym rogu -->
-  <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'">
-    {{ isDarkMode() ? '☀️ Tryb Jasny' : '🌙 Tryb Ciemny' }}
-  </button>
-
   <header class="app-header">
-    <h1>🚀 Productivity App</h1>
-    <p>System zarządzania czasem i celami</p>
+    <div class="header-left">
+      <h1>🚀 Productivity App</h1>
+      <p>System zarządzania czasem i celami</p>
+    </div>
 
-    <!-- Główny, wyeksponowany przycisk w aplikacji -->
-    <button class="btn-hero-add" (click)="openTaskForm()">
-      ➕ Dodaj nowe zadanie
-    </button>
+    <!-- Przyciski akcji po prawej stronie nagłówka -->
+    <div class="header-actions">
+      <button class="btn-hero-add" (click)="openTaskForm()">
+        ➕ Dodaj zadanie
+      </button>
+
+      <button class="btn-theme-toggle" (click)="toggleTheme()" [title]="isDarkMode() ? 'Przełącz na tryb jasny' : 'Przełącz na tryb ciemny'">
+        {{ isDarkMode() ? '☀️ Tryb Jasny' : '🌙 Tryb Ciemny' }}
+      </button>
+    </div>
   </header>
 
   <main class="dashboard-grid">
-    <!-- Lewa kolumna: Kalendarz 3-dniowy rozciągnięty do dołu -->
+    <!-- Lewa kolumna: Kalendarz 3-dniowy -->
     <div class="main-column">
       <app-calendar></app-calendar>
     </div>
 
-    <!-- Prawa kolumna: Backlog rozciągnięty do dołu -->
+    <!-- Prawa kolumna: Backlog -->
     <div class="sidebar-column">
       <app-backlog (taskScheduled)="onTaskScheduled()"></app-backlog>
     </div>
